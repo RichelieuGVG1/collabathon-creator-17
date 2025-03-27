@@ -30,7 +30,7 @@ const UserCard = ({ user, index = 0, showAddButton = false, onAddClick }: UserCa
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+    return date.toLocaleDateString('ru-RU', { 
       year: 'numeric', 
       month: 'short' 
     });
@@ -63,7 +63,7 @@ const UserCard = ({ user, index = 0, showAddButton = false, onAddClick }: UserCa
                 {user.name}
               </Link>
               <div className="text-xs text-muted-foreground">
-                Member since {formatDate(user.createdAt)}
+                Участник с {formatDate(user.createdAt)}
               </div>
             </div>
             
@@ -89,7 +89,7 @@ const UserCard = ({ user, index = 0, showAddButton = false, onAddClick }: UserCa
                 className="mt-2"
                 onClick={onAddClick}
               >
-                Invite to Team
+                Пригласить в команду
               </Button>
             )}
           </div>

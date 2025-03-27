@@ -19,8 +19,8 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
     const startDate = new Date(start);
     const endDate = new Date(end);
     
-    const startMonth = startDate.toLocaleString('default', { month: 'short' });
-    const endMonth = endDate.toLocaleString('default', { month: 'short' });
+    const startMonth = startDate.toLocaleString('ru-RU', { month: 'short' });
+    const endMonth = endDate.toLocaleString('ru-RU', { month: 'short' });
     
     const startDay = startDate.getDate();
     const endDay = endDate.getDate();
@@ -83,7 +83,7 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
               
               <div className="flex items-center">
                 <Users size={12} className="mr-1" />
-                <span>{hackathon.teamSize.min}-{hackathon.teamSize.max} members</span>
+                <span>{hackathon.teamSize.min}-{hackathon.teamSize.max} участников</span>
               </div>
             </div>
             

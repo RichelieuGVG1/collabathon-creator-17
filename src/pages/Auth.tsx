@@ -15,7 +15,7 @@ const Auth = () => {
   
   // Determine if we're on the login or register page
   const isLogin = location.pathname.includes('/login');
-  const pageTitle = isLogin ? 'Sign In' : 'Create an Account';
+  const pageTitle = isLogin ? 'Вход' : 'Создание аккаунта';
   
   // Form state
   const [email, setEmail] = useState('');
@@ -45,15 +45,15 @@ const Auth = () => {
             >
               <div className="flex items-center">
                 <ArrowLeft size={16} className="mr-1" />
-                <span>Back to Home</span>
+                <span>Вернуться на главную</span>
               </div>
             </Link>
             
             <h1 className="text-3xl font-bold mb-2">{pageTitle}</h1>
             <p className="text-muted-foreground">
               {isLogin 
-                ? 'Welcome back! Sign in to your account to continue.'
-                : 'Join the community to participate in hackathons and find teams.'}
+                ? 'С возвращением! Войдите в свой аккаунт, чтобы продолжить.'
+                : 'Присоединяйтесь к сообществу, чтобы участвовать в хакатонах и находить команды.'}
             </p>
           </div>
         </FadeIn>
@@ -64,10 +64,10 @@ const Auth = () => {
               <CardContent className="p-6 space-y-4">
                 {!isLogin && (
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label htmlFor="name">Полное имя</Label>
                     <Input 
                       id="name" 
-                      placeholder="Enter your name" 
+                      placeholder="Введите ваше имя" 
                       value={name} 
                       onChange={(e) => setName(e.target.value)} 
                       required={!isLogin}
@@ -80,7 +80,7 @@ const Auth = () => {
                   <Input 
                     id="email" 
                     type="email" 
-                    placeholder="you@example.com" 
+                    placeholder="вы@пример.com" 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)} 
                     required
@@ -89,13 +89,13 @@ const Auth = () => {
                 
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">Пароль</Label>
                     {isLogin && (
                       <Link 
                         to="/auth/reset-password" 
                         className="text-xs text-primary hover:underline"
                       >
-                        Forgot password?
+                        Забыли пароль?
                       </Link>
                     )}
                   </div>
@@ -103,7 +103,7 @@ const Auth = () => {
                     <Input 
                       id="password" 
                       type={showPassword ? "text" : "password"} 
-                      placeholder={isLogin ? "Enter your password" : "Create a password"}
+                      placeholder={isLogin ? "Введите ваш пароль" : "Создайте пароль"}
                       className="pr-10"
                       value={password} 
                       onChange={(e) => setPassword(e.target.value)} 
@@ -123,8 +123,8 @@ const Auth = () => {
                 
                 <Button type="submit" className="w-full gap-2">
                   {isLogin 
-                    ? <><LogIn size={16} /> Sign In</>
-                    : <><UserPlus size={16} /> Create Account</>
+                    ? <><LogIn size={16} /> Войти</>
+                    : <><UserPlus size={16} /> Создать аккаунт</>
                   }
                 </Button>
                 
@@ -133,13 +133,13 @@ const Auth = () => {
                     <div className="w-full border-t border-border"></div>
                   </div>
                   <div className="relative px-4 bg-card text-xs uppercase text-muted-foreground">
-                    Or continue with
+                    Или продолжить с
                   </div>
                 </div>
                 
                 <Button variant="outline" className="w-full" type="button">
                   <Github size={16} className="mr-2" />
-                  <span>{isLogin ? 'Sign in' : 'Sign up'} with GitHub</span>
+                  <span>{isLogin ? 'Войти' : 'Зарегистрироваться'} через GitHub</span>
                 </Button>
               </CardContent>
               
@@ -147,16 +147,16 @@ const Auth = () => {
                 <div className="text-center w-full text-sm">
                   {isLogin ? (
                     <div>
-                      Don't have an account?{' '}
+                      Нет аккаунта?{' '}
                       <Link to="/auth/register" className="text-primary hover:underline font-medium">
-                        Sign up
+                        Зарегистрироваться
                       </Link>
                     </div>
                   ) : (
                     <div>
-                      Already have an account?{' '}
+                      Уже есть аккаунт?{' '}
                       <Link to="/auth/login" className="text-primary hover:underline font-medium">
-                        Sign in
+                        Войти
                       </Link>
                     </div>
                   )}

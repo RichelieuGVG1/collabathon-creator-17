@@ -30,7 +30,7 @@ const TeamCard = ({ team, hackathonName, index = 0 }: TeamCardProps) => {
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+    return date.toLocaleDateString('ru-RU', { 
       month: 'short', 
       day: 'numeric' 
     });
@@ -50,7 +50,7 @@ const TeamCard = ({ team, hackathonName, index = 0 }: TeamCardProps) => {
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-lg">{team.name}</h3>
             <Badge variant="outline" className="text-xs">
-              {team.members.length}/{team.maxMembers} members
+              {team.members.length}/{team.maxMembers} участников
             </Badge>
           </div>
           
@@ -101,11 +101,11 @@ const TeamCard = ({ team, hackathonName, index = 0 }: TeamCardProps) => {
       
       <CardFooter className="px-5 py-4 bg-secondary/50 flex items-center justify-between">
         <div className="text-xs text-muted-foreground">
-          Created {formatDate(team.createdAt)}
+          Создана {formatDate(team.createdAt)}
         </div>
         
         <Link to={`/teams/${team.id}`}>
-          <Button size="sm" variant="secondary">View Team</Button>
+          <Button size="sm" variant="secondary">Просмотр команды</Button>
         </Link>
       </CardFooter>
     </Card>

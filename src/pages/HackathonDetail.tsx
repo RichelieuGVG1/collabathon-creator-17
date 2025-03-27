@@ -14,14 +14,14 @@ import { Calendar, MapPin, Users, Clock, Globe, Building, ChevronLeft, Plus } fr
 const hackathons = [
   {
     id: '1',
-    name: 'Global AI Innovation Hackathon',
-    description: 'Join the world\'s largest AI hackathon and build solutions that will shape the future of artificial intelligence. Participants will tackle real-world challenges and develop cutting-edge AI applications that could potentially transform industries.\n\nThis hackathon is perfect for AI enthusiasts, machine learning engineers, data scientists, and anyone interested in pushing the boundaries of what AI can achieve. Whether you\'re a seasoned professional or just starting out in the field, this event offers valuable opportunities to learn, network, and showcase your talents.',
+    name: 'Глобальный хакатон инноваций в ИИ',
+    description: 'Присоединяйтесь к крупнейшему хакатону по искусственному интеллекту и создавайте решения, которые будут формировать будущее ИИ. Участники будут решать реальные проблемы и разрабатывать передовые приложения ИИ, которые могут потенциально трансформировать отрасли.\n\nЭтот хакатон идеально подходит для энтузиастов ИИ, инженеров машинного обучения, специалистов по данным и всех, кто заинтересован в расширении границ возможностей ИИ. Независимо от того, являетесь ли вы опытным профессионалом или только начинаете работать в этой области, это мероприятие предлагает ценные возможности для обучения, создания сети контактов и демонстрации ваших талантов.',
     startDate: '2023-09-15',
     endDate: '2023-09-18',
-    location: 'Virtual',
-    tags: ['AI', 'Machine Learning', 'Innovation'],
+    location: 'Виртуально',
+    tags: ['ИИ', 'Машинное обучение', 'Инновации'],
     imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'AI Alliance',
+    organizerName: 'Альянс ИИ',
     organizerLogo: 'https://via.placeholder.com/40',
     teamSize: {
       min: 2,
@@ -30,54 +30,54 @@ const hackathons = [
     website: 'https://example.com/hackathon',
     prizes: [
       {
-        place: '1st',
-        description: '$10,000 cash prize + AI computing credits',
+        place: '1-е место',
+        description: 'Денежный приз $10,000 + кредиты для вычислений ИИ',
       },
       {
-        place: '2nd',
-        description: '$5,000 cash prize + mentorship opportunities',
+        place: '2-е место',
+        description: 'Денежный приз $5,000 + возможности менторства',
       },
       {
-        place: '3rd',
-        description: '$2,500 cash prize + product licenses',
+        place: '3-е место',
+        description: 'Денежный приз $2,500 + лицензии на продукты',
       }
     ],
     schedule: [
       {
         date: '2023-09-15',
-        time: '10:00 AM - 11:00 AM',
-        title: 'Opening Ceremony',
-        description: 'Welcome address and introduction to the hackathon challenges.'
+        time: '10:00 - 11:00',
+        title: 'Церемония открытия',
+        description: 'Приветственное обращение и введение в задачи хакатона.'
       },
       {
         date: '2023-09-15',
-        time: '11:30 AM - 12:30 PM',
-        title: 'Team Formation',
-        description: 'Networking session for participants to form teams.'
+        time: '11:30 - 12:30',
+        title: 'Формирование команд',
+        description: 'Сессия нетворкинга для формирования команд участниками.'
       },
       {
         date: '2023-09-15',
-        time: '1:00 PM',
-        title: 'Hacking Begins',
-        description: 'Start building your projects!'
+        time: '13:00',
+        title: 'Начало хакатона',
+        description: 'Начало разработки проектов!'
       },
       {
         date: '2023-09-17',
-        time: '5:00 PM',
-        title: 'Submissions Due',
-        description: 'All project submissions must be completed by this time.'
+        time: '17:00',
+        title: 'Срок подачи проектов',
+        description: 'Все проекты должны быть представлены к этому времени.'
       },
       {
         date: '2023-09-18',
-        time: '10:00 AM - 1:00 PM',
-        title: 'Project Presentations',
-        description: 'Teams present their projects to judges and other participants.'
+        time: '10:00 - 13:00',
+        title: 'Презентации проектов',
+        description: 'Команды представляют свои проекты судьям и другим участникам.'
       },
       {
         date: '2023-09-18',
-        time: '3:00 PM - 4:00 PM',
-        title: 'Awards Ceremony',
-        description: 'Announcement of winners and prize distribution.'
+        time: '15:00 - 16:00',
+        title: 'Церемония награждения',
+        description: 'Объявление победителей и распределение призов.'
       }
     ]
   },
@@ -89,13 +89,13 @@ const teams = [
   {
     id: '1',
     hackathonId: '1',
-    name: 'Data Wizards',
-    description: 'A team of data scientists and machine learning engineers building the next generation of AI tools.',
+    name: 'Волшебники данных',
+    description: 'Команда специалистов по данным и инженеров машинного обучения, создающих инструменты ИИ нового поколения.',
     tags: ['Python', 'TensorFlow', 'NLP'],
     members: [
-      {id: '1', name: 'Alex Johnson', email: 'alex@example.com', bio: 'ML Engineer', tags: [], photoUrl: '', createdAt: '2023-01-15'},
-      {id: '2', name: 'Sam Wilson', email: 'sam@example.com', bio: 'Data Scientist', tags: [], photoUrl: '', createdAt: '2023-02-10'},
-      {id: '3', name: 'Taylor Kim', email: 'taylor@example.com', bio: 'AI Researcher', tags: [], photoUrl: '', createdAt: '2023-01-05'}
+      {id: '1', name: 'Алекс Джонсон', email: 'alex@example.com', bio: 'Инженер МО', tags: [], photoUrl: '', createdAt: '2023-01-15'},
+      {id: '2', name: 'Сэм Уилсон', email: 'sam@example.com', bio: 'Специалист по данным', tags: [], photoUrl: '', createdAt: '2023-02-10'},
+      {id: '3', name: 'Тэйлор Ким', email: 'taylor@example.com', bio: 'Исследователь ИИ', tags: [], photoUrl: '', createdAt: '2023-01-05'}
     ],
     maxMembers: 5,
     createdBy: '1',
@@ -104,12 +104,12 @@ const teams = [
   {
     id: '3',
     hackathonId: '1',
-    name: 'AI Innovators',
-    description: 'Focused on developing innovative AI solutions with practical applications in healthcare and education.',
-    tags: ['AI', 'Healthcare', 'Education'],
+    name: 'Инноваторы ИИ',
+    description: 'Фокусируемся на разработке инновационных решений ИИ с практическим применением в здравоохранении и образовании.',
+    tags: ['ИИ', 'Здравоохранение', 'Образование'],
     members: [
-      {id: '6', name: 'Riley Chen', email: 'riley@example.com', bio: 'AI Specialist', tags: [], photoUrl: '', createdAt: '2023-02-05'},
-      {id: '7', name: 'Jordan Lee', email: 'jordan@example.com', bio: 'Backend Developer', tags: [], photoUrl: '', createdAt: '2023-03-15'}
+      {id: '6', name: 'Райли Чен', email: 'riley@example.com', bio: 'Специалист по ИИ', tags: [], photoUrl: '', createdAt: '2023-02-05'},
+      {id: '7', name: 'Джордан Ли', email: 'jordan@example.com', bio: 'Backend разработчик', tags: [], photoUrl: '', createdAt: '2023-03-15'}
     ],
     maxMembers: 4,
     createdBy: '6',
@@ -129,10 +129,10 @@ const HackathonDetail = () => {
     return (
       <div className="min-h-screen pt-20 px-4">
         <div className="container mx-auto py-16 text-center">
-          <h1 className="text-2xl font-bold mb-4">Hackathon not found</h1>
-          <p className="text-muted-foreground mb-6">The hackathon you're looking for doesn't exist or has been removed.</p>
+          <h1 className="text-2xl font-bold mb-4">Хакатон не найден</h1>
+          <p className="text-muted-foreground mb-6">Хакатон, который вы ищете, не существует или был удален.</p>
           <Link to="/hackathons">
-            <Button>Back to Hackathons</Button>
+            <Button>Вернуться к хакатонам</Button>
           </Link>
         </div>
       </div>
@@ -153,7 +153,7 @@ const HackathonDetail = () => {
       day: 'numeric' 
     };
     
-    return `${startDate.toLocaleDateString('en-US', options)} - ${endDate.toLocaleDateString('en-US', options)}`;
+    return `${startDate.toLocaleDateString('ru-RU', options)} - ${endDate.toLocaleDateString('ru-RU', options)}`;
   };
   
   return (
@@ -169,7 +169,7 @@ const HackathonDetail = () => {
         <div className="container mx-auto px-4 h-full relative flex flex-col justify-end pb-8">
           <Link to="/hackathons" className="text-white hover:text-white/80 transition-colors mb-auto mt-6 flex items-center">
             <ChevronLeft size={16} className="mr-1" />
-            <span>Back to Hackathons</span>
+            <span>Назад к хакатонам</span>
           </Link>
           
           <FadeIn>
@@ -209,7 +209,7 @@ const HackathonDetail = () => {
               
               <div className="flex items-center">
                 <Users size={16} className="mr-2" />
-                <span>{hackathon.teamSize.min}-{hackathon.teamSize.max} members per team</span>
+                <span>{hackathon.teamSize.min}-{hackathon.teamSize.max} участников в команде</span>
               </div>
             </div>
           </FadeIn>
@@ -223,15 +223,15 @@ const HackathonDetail = () => {
           <div className="flex-1">
             <Tabs defaultValue="info" value={activeTab} onValueChange={setActiveTab} className="mb-8">
               <TabsList className="w-full grid grid-cols-3">
-                <TabsTrigger value="info">Information</TabsTrigger>
-                <TabsTrigger value="teams">Teams</TabsTrigger>
-                <TabsTrigger value="schedule">Schedule</TabsTrigger>
+                <TabsTrigger value="info">Информация</TabsTrigger>
+                <TabsTrigger value="teams">Команды</TabsTrigger>
+                <TabsTrigger value="schedule">Расписание</TabsTrigger>
               </TabsList>
               
               <TabsContent value="info" className="mt-6 animate-fade-in">
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-2xl font-semibold mb-4">About this Hackathon</h2>
+                    <h2 className="text-2xl font-semibold mb-4">Об этом хакатоне</h2>
                     <div className="text-muted-foreground space-y-4">
                       {hackathon.description.split('\n\n').map((paragraph, index) => (
                         <p key={index}>{paragraph}</p>
@@ -240,7 +240,7 @@ const HackathonDetail = () => {
                   </div>
                   
                   <div>
-                    <h3 className="text-xl font-semibold mb-4">Prizes</h3>
+                    <h3 className="text-xl font-semibold mb-4">Призы</h3>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {hackathon.prizes?.map((prize, index) => (
                         <Card key={index} className={index === 0 ? "border-primary/30 bg-primary/5" : ""}>
@@ -258,11 +258,11 @@ const HackathonDetail = () => {
               <TabsContent value="teams" className="mt-6 animate-fade-in">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-semibold">Teams</h2>
+                    <h2 className="text-2xl font-semibold">Команды</h2>
                     <Link to="/teams/create">
                       <Button className="gap-1">
                         <Plus size={16} />
-                        <span>Create Team</span>
+                        <span>Создать команду</span>
                       </Button>
                     </Link>
                   </div>
@@ -279,12 +279,12 @@ const HackathonDetail = () => {
                     <Card className="border border-dashed">
                       <CardContent className="flex flex-col items-center justify-center py-12">
                         <div className="text-center space-y-3">
-                          <h3 className="text-lg font-medium">No teams yet</h3>
+                          <h3 className="text-lg font-medium">Пока нет команд</h3>
                           <p className="text-muted-foreground max-w-md mx-auto">
-                            Be the first to create a team for this hackathon and start looking for teammates!
+                            Будьте первым, кто создаст команду для этого хакатона и начнет искать участников!
                           </p>
                           <Link to="/teams/create">
-                            <Button>Create a Team</Button>
+                            <Button>Создать команду</Button>
                           </Link>
                         </div>
                       </CardContent>
@@ -294,12 +294,12 @@ const HackathonDetail = () => {
               </TabsContent>
               
               <TabsContent value="schedule" className="mt-6 animate-fade-in">
-                <h2 className="text-2xl font-semibold mb-6">Event Schedule</h2>
+                <h2 className="text-2xl font-semibold mb-6">Расписание мероприятия</h2>
                 
                 <div className="space-y-6">
                   {hackathon.schedule?.map((item, index) => {
                     const date = new Date(item.date);
-                    const formattedDate = date.toLocaleDateString('en-US', { 
+                    const formattedDate = date.toLocaleDateString('ru-RU', { 
                       weekday: 'long',
                       month: 'long', 
                       day: 'numeric' 
@@ -336,13 +336,13 @@ const HackathonDetail = () => {
           <div className="w-full md:w-80 space-y-6">
             <Card>
               <CardContent className="p-5 space-y-5">
-                <h3 className="font-semibold">Quick Info</h3>
+                <h3 className="font-semibold">Краткая информация</h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-start">
                     <Calendar size={18} className="mr-3 text-muted-foreground mt-0.5" />
                     <div>
-                      <div className="font-medium text-sm">Date</div>
+                      <div className="font-medium text-sm">Дата</div>
                       <div className="text-sm text-muted-foreground">
                         {formatDateRange(hackathon.startDate, hackathon.endDate)}
                       </div>
@@ -352,7 +352,7 @@ const HackathonDetail = () => {
                   <div className="flex items-start">
                     <MapPin size={18} className="mr-3 text-muted-foreground mt-0.5" />
                     <div>
-                      <div className="font-medium text-sm">Location</div>
+                      <div className="font-medium text-sm">Место проведения</div>
                       <div className="text-sm text-muted-foreground">{hackathon.location}</div>
                     </div>
                   </div>
@@ -360,9 +360,9 @@ const HackathonDetail = () => {
                   <div className="flex items-start">
                     <Users size={18} className="mr-3 text-muted-foreground mt-0.5" />
                     <div>
-                      <div className="font-medium text-sm">Team Size</div>
+                      <div className="font-medium text-sm">Размер команды</div>
                       <div className="text-sm text-muted-foreground">
-                        {hackathon.teamSize.min} to {hackathon.teamSize.max} members
+                        от {hackathon.teamSize.min} до {hackathon.teamSize.max} участников
                       </div>
                     </div>
                   </div>
@@ -370,7 +370,7 @@ const HackathonDetail = () => {
                   <div className="flex items-start">
                     <Building size={18} className="mr-3 text-muted-foreground mt-0.5" />
                     <div>
-                      <div className="font-medium text-sm">Organizer</div>
+                      <div className="font-medium text-sm">Организатор</div>
                       <div className="text-sm text-muted-foreground">{hackathon.organizerName}</div>
                     </div>
                   </div>
@@ -378,14 +378,14 @@ const HackathonDetail = () => {
                   <div className="flex items-start">
                     <Globe size={18} className="mr-3 text-muted-foreground mt-0.5" />
                     <div>
-                      <div className="font-medium text-sm">Website</div>
+                      <div className="font-medium text-sm">Сайт</div>
                       <a 
                         href={hackathon.website} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="text-sm text-primary hover:underline"
                       >
-                        Visit Official Website
+                        Посетить официальный сайт
                       </a>
                     </div>
                   </div>
@@ -395,7 +395,7 @@ const HackathonDetail = () => {
                   <Link to="/teams/create">
                     <Button className="w-full gap-1">
                       <Plus size={16} />
-                      <span>Create a Team</span>
+                      <span>Создать команду</span>
                     </Button>
                   </Link>
                 </div>

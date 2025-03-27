@@ -10,14 +10,14 @@ import { ArrowRight, Zap, Users, Award, Sparkles } from 'lucide-react';
 const featuredHackathons = [
   {
     id: '1',
-    name: 'Global AI Innovation Hackathon',
-    description: 'Join the world\'s largest AI hackathon and build solutions that will shape the future of artificial intelligence.',
+    name: 'Глобальный хакатон инноваций в ИИ',
+    description: 'Присоединяйтесь к крупнейшему хакатону по искусственному интеллекту и создавайте решения, которые будут формировать будущее ИИ.',
     startDate: '2023-09-15',
     endDate: '2023-09-18',
-    location: 'Virtual',
-    tags: ['AI', 'Machine Learning', 'Innovation'],
+    location: 'Виртуально',
+    tags: ['ИИ', 'Машинное обучение', 'Инновации'],
     imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'AI Alliance',
+    organizerName: 'Альянс ИИ',
     organizerLogo: 'https://via.placeholder.com/40',
     teamSize: {
       min: 2,
@@ -26,14 +26,14 @@ const featuredHackathons = [
   },
   {
     id: '2',
-    name: 'Climate Tech Summit Challenge',
-    description: 'Develop innovative solutions to address climate change and environmental challenges through technology.',
+    name: 'Саммит технологий для климата',
+    description: 'Разработка инновационных решений для борьбы с изменением климата и экологическими проблемами с помощью технологий.',
     startDate: '2023-10-05',
     endDate: '2023-10-07',
-    location: 'San Francisco, CA',
-    tags: ['CleanTech', 'Sustainability', 'Environment'],
+    location: 'Сан-Франциско, Калифорния',
+    tags: ['ЭкоТехнологии', 'Устойчивое развитие', 'Экология'],
     imageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'Climate Alliance',
+    organizerName: 'Альянс Климата',
     organizerLogo: 'https://via.placeholder.com/40',
     teamSize: {
       min: 3,
@@ -42,14 +42,14 @@ const featuredHackathons = [
   },
   {
     id: '3',
-    name: 'Web3 Development Hackathon',
-    description: 'Push the boundaries of blockchain technology by creating innovative dApps and Web3 solutions.',
+    name: 'Хакатон разработки Web3',
+    description: 'Расширяйте границы блокчейн-технологий, создавая инновационные dApps и решения Web3.',
     startDate: '2023-11-12',
     endDate: '2023-11-14',
-    location: 'Virtual',
-    tags: ['Blockchain', 'Web3', 'Crypto'],
+    location: 'Виртуально',
+    tags: ['Блокчейн', 'Web3', 'Крипто'],
     imageUrl: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'Blockchain Foundation',
+    organizerName: 'Блокчейн Фонд',
     organizerLogo: 'https://via.placeholder.com/40',
     teamSize: {
       min: 2,
@@ -62,13 +62,13 @@ const featuredTeams = [
   {
     id: '1',
     hackathonId: '1',
-    name: 'Data Wizards',
-    description: 'A team of data scientists and machine learning engineers building the next generation of AI tools.',
+    name: 'Волшебники данных',
+    description: 'Команда специалистов по данным и инженеров машинного обучения, создающих инструменты ИИ нового поколения.',
     tags: ['Python', 'TensorFlow', 'NLP'],
     members: [
-      {id: '1', name: 'Alex Johnson', email: 'alex@example.com', bio: 'ML Engineer', tags: [], photoUrl: '', createdAt: '2023-01-15'},
-      {id: '2', name: 'Sam Wilson', email: 'sam@example.com', bio: 'Data Scientist', tags: [], photoUrl: '', createdAt: '2023-02-10'},
-      {id: '3', name: 'Taylor Kim', email: 'taylor@example.com', bio: 'AI Researcher', tags: [], photoUrl: '', createdAt: '2023-01-05'}
+      {id: '1', name: 'Алекс Джонсон', email: 'alex@example.com', bio: 'Инженер МО', tags: [], photoUrl: '', createdAt: '2023-01-15'},
+      {id: '2', name: 'Сэм Уилсон', email: 'sam@example.com', bio: 'Специалист по данным', tags: [], photoUrl: '', createdAt: '2023-02-10'},
+      {id: '3', name: 'Тэйлор Ким', email: 'taylor@example.com', bio: 'Исследователь ИИ', tags: [], photoUrl: '', createdAt: '2023-01-05'}
     ],
     maxMembers: 5,
     createdBy: '1',
@@ -77,12 +77,12 @@ const featuredTeams = [
   {
     id: '2',
     hackathonId: '2',
-    name: 'EcoSolutions',
-    description: 'Passionate about creating technology that helps combat climate change and promote sustainability.',
-    tags: ['CleanTech', 'IoT', 'React'],
+    name: 'ЭкоРешения',
+    description: 'Увлеченные созданием технологий, которые помогают бороться с изменением климата и способствуют устойчивому развитию.',
+    tags: ['ЭкоТехнологии', 'IoT', 'React'],
     members: [
-      {id: '4', name: 'Jamie Smith', email: 'jamie@example.com', bio: 'Full-stack Developer', tags: [], photoUrl: '', createdAt: '2023-01-15'},
-      {id: '5', name: 'Casey Brown', email: 'casey@example.com', bio: 'UX Designer', tags: [], photoUrl: '', createdAt: '2023-03-20'}
+      {id: '4', name: 'Джейми Смит', email: 'jamie@example.com', bio: 'Full-stack разработчик', tags: [], photoUrl: '', createdAt: '2023-01-15'},
+      {id: '5', name: 'Кейси Браун', email: 'casey@example.com', bio: 'UX дизайнер', tags: [], photoUrl: '', createdAt: '2023-03-20'}
     ],
     maxMembers: 4,
     createdBy: '4',
@@ -100,13 +100,13 @@ const Index = () => {
         <div className="container mx-auto max-w-5xl">
           <SlideUp delay={100}>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-center">
-              Find your perfect <span className="text-primary underline decoration-secondary decoration-4 underline-offset-4">hackathon team</span>
+              Найдите свою идеальную <span className="text-primary underline decoration-secondary decoration-4 underline-offset-4">команду для хакатона</span>
             </h1>
           </SlideUp>
           
           <SlideUp delay={300}>
             <p className="mt-6 text-lg text-muted-foreground text-center max-w-2xl mx-auto">
-              Discover hackathons, form teams with talented individuals, and build amazing projects together.
+              Откройте для себя хакатоны, создавайте команды с талантливыми людьми и вместе создавайте удивительные проекты.
             </p>
           </SlideUp>
           
@@ -114,12 +114,12 @@ const Index = () => {
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/hackathons">
                 <Button size="lg" className="font-medium text-base w-full sm:w-auto">
-                  Browse Hackathons
+                  Просмотр хакатонов
                 </Button>
               </Link>
               <Link to="/teams">
                 <Button size="lg" variant="outline" className="font-medium text-base w-full sm:w-auto">
-                  Find Teams
+                  Найти команды
                 </Button>
               </Link>
             </div>
@@ -132,9 +132,9 @@ const Index = () => {
         <div className="container mx-auto">
           <FadeIn delay={100}>
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-semibold">Featured Hackathons</h2>
+              <h2 className="text-2xl sm:text-3xl font-semibold">Избранные хакатоны</h2>
               <Link to="/hackathons" className="flex items-center text-sm font-medium hover:underline">
-                View all <ArrowRight size={16} className="ml-1" />
+                Смотреть все <ArrowRight size={16} className="ml-1" />
               </Link>
             </div>
           </FadeIn>
@@ -154,7 +154,7 @@ const Index = () => {
         <div className="container mx-auto max-w-5xl">
           <FadeIn delay={100}>
             <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-12">
-              The Ultimate Hackathon Experience
+              Лучший опыт хакатонов
             </h2>
           </FadeIn>
           
@@ -164,9 +164,9 @@ const Index = () => {
                 <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
                   <Zap size={24} className="text-primary" />
                 </div>
-                <h3 className="text-xl font-medium mb-2">Discover Events</h3>
+                <h3 className="text-xl font-medium mb-2">Откройте для себя события</h3>
                 <p className="text-muted-foreground">
-                  Browse through upcoming hackathons worldwide, filtering by date, location, or technology.
+                  Просматривайте предстоящие хакатоны по всему миру, фильтруя по дате, месту или технологии.
                 </p>
               </div>
               
@@ -174,9 +174,9 @@ const Index = () => {
                 <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
                   <Users size={24} className="text-primary" />
                 </div>
-                <h3 className="text-xl font-medium mb-2">Build Teams</h3>
+                <h3 className="text-xl font-medium mb-2">Создавайте команды</h3>
                 <p className="text-muted-foreground">
-                  Find teammates with complementary skills or join an existing team that matches your interests.
+                  Найдите участников с дополнительными навыками или присоединитесь к существующей команде, соответствующей вашим интересам.
                 </p>
               </div>
               
@@ -184,9 +184,9 @@ const Index = () => {
                 <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
                   <Award size={24} className="text-primary" />
                 </div>
-                <h3 className="text-xl font-medium mb-2">Win Together</h3>
+                <h3 className="text-xl font-medium mb-2">Побеждайте вместе</h3>
                 <p className="text-muted-foreground">
-                  Collaborate effectively, showcase your skills, and increase your chances of winning prizes.
+                  Эффективно сотрудничайте, демонстрируйте свои навыки и увеличивайте свои шансы на получение призов.
                 </p>
               </div>
             </StaggerContainer>
@@ -199,9 +199,9 @@ const Index = () => {
         <div className="container mx-auto">
           <FadeIn delay={100}>
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-semibold">Popular Teams</h2>
+              <h2 className="text-2xl sm:text-3xl font-semibold">Популярные команды</h2>
               <Link to="/teams" className="flex items-center text-sm font-medium hover:underline">
-                View all <ArrowRight size={16} className="ml-1" />
+                Смотреть все <ArrowRight size={16} className="ml-1" />
               </Link>
             </div>
           </FadeIn>
@@ -238,13 +238,13 @@ const Index = () => {
           
           <SlideUp delay={200}>
             <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">
-              Ready to join your next hackathon?
+              Готовы присоединиться к следующему хакатону?
             </h2>
           </SlideUp>
           
           <SlideUp delay={400}>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-              Create your account today and start connecting with talented developers, designers, and visionaries who share your passion.
+              Создайте свой аккаунт сегодня и начните общаться с талантливыми разработчиками, дизайнерами и визионерами, которые разделяют вашу страсть.
             </p>
           </SlideUp>
           
@@ -252,12 +252,12 @@ const Index = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth/register">
                 <Button size="lg" className="font-medium text-base w-full sm:w-auto">
-                  Create Account
+                  Создать аккаунт
                 </Button>
               </Link>
               <Link to="/hackathons">
                 <Button size="lg" variant="outline" className="font-medium text-base w-full sm:w-auto">
-                  Explore Hackathons
+                  Изучить хакатоны
                 </Button>
               </Link>
             </div>

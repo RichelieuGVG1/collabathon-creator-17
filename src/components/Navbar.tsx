@@ -34,14 +34,14 @@ const Navbar = () => {
           to="/" 
           className="text-primary font-bold text-xl tracking-tight hover:opacity-80 transition-opacity"
         >
-          HackHub
+          ХакХаб
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-1">
-          <NavLink to="/" label="Home" isActive={isActive('/')} />
-          <NavLink to="/hackathons" label="Hackathons" isActive={isActive('/hackathons')} />
-          <NavLink to="/teams" label="Teams" isActive={isActive('/teams')} />
+          <NavLink to="/" label="Главная" isActive={isActive('/')} />
+          <NavLink to="/hackathons" label="Хакатоны" isActive={isActive('/hackathons')} />
+          <NavLink to="/teams" label="Команды" isActive={isActive('/teams')} />
         </nav>
 
         {/* Desktop Right Side */}
@@ -52,13 +52,13 @@ const Navbar = () => {
           
           <Link to="/auth/login">
             <Button variant="ghost" size="sm" className="font-medium">
-              Sign In
+              Войти
             </Button>
           </Link>
           
           <Link to="/auth/register">
             <Button className="font-medium">
-              Sign Up
+              Регистрация
             </Button>
           </Link>
         </div>
@@ -85,7 +85,7 @@ const Navbar = () => {
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Home
+              Главная
             </Link>
             <Link 
               to="/hackathons" 
@@ -94,7 +94,7 @@ const Navbar = () => {
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Hackathons
+              Хакатоны
             </Link>
             <Link 
               to="/teams" 
@@ -103,14 +103,14 @@ const Navbar = () => {
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              Teams
+              Команды
             </Link>
             <div className="pt-2 flex items-center space-x-2 border-t border-border">
               <Link to="/auth/login" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full">Sign In</Button>
+                <Button variant="outline" className="w-full">Войти</Button>
               </Link>
               <Link to="/auth/register" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="w-full">Sign Up</Button>
+                <Button className="w-full">Регистрация</Button>
               </Link>
             </div>
           </div>
