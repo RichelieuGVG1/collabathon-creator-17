@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { FadeIn, SlideUp, StaggerContainer } from '@/components/Animations';
@@ -78,7 +77,7 @@ const featuredTeams = [
     id: '2',
     hackathonId: '2',
     name: 'ЭкоРешения',
-    description: 'Увлеченные созданием технологий, которые помогают бороться с изменением климата и способствуют устойчивому развитию.',
+    description: 'Увлеченные созданием техн��логий, которые помогают бороться с изменением климата и способствуют устойчивому развитию.',
     tags: ['ЭкоТехнологии', 'IoT', 'React'],
     members: [
       {id: '4', name: 'Джейми Смит', email: 'jamie@example.com', bio: 'Full-stack разработчик', tags: [], photoUrl: '', createdAt: '2023-01-15'},
@@ -139,7 +138,7 @@ const Index = () => {
             </div>
           </FadeIn>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <StaggerContainer initialDelay={300} staggerDelay={150}>
               {featuredHackathons.map((hackathon, index) => (
                 <HackathonCard key={hackathon.id} hackathon={hackathon} index={index} />
@@ -158,7 +157,7 @@ const Index = () => {
             </h2>
           </FadeIn>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             <StaggerContainer initialDelay={300} staggerDelay={150}>
               <div className="bg-secondary/50 p-6 rounded-lg">
                 <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
@@ -206,7 +205,7 @@ const Index = () => {
             </div>
           </FadeIn>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <StaggerContainer initialDelay={300} staggerDelay={150}>
               {featuredTeams.map((team, index) => (
                 <TeamCard 
