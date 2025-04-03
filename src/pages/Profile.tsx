@@ -1,304 +1,229 @@
+
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useParams } from 'react-router-dom';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { FadeIn, StaggerContainer } from '@/components/Animations';
-import TeamCard from '@/components/TeamCard';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FadeIn } from '@/components/Animations';
+import { useAuthStore, useTeamStore } from '@/lib/store';
+import { MapPin, Globe, Github, Calendar } from 'lucide-react';
 import TeamInvitations from '@/components/TeamInvitations';
-import { Calendar, MapPin, Mail, User, Users, Pencil } from 'lucide-react';
-import { useUserStore, useAuthStore, useTeamStore, useHackathonStore } from '@/lib/store';
 
 const Profile = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('teams');
+  const { id } = useParams();
+  const { users, currentUser } = useAuthStore();
+  const { getTeamsForUser } = useTeamStore();
+  const [activeTab, setActiveTab] = useState('info');
   
-  const { getUserById } = useUserStore();
-  const { currentUser, isAuthenticated, logout } = useAuthStore();
-  const { teams } = useTeamStore();
-  const { getHackathonById } = useHackathonStore();
+  // Find the user either by ID or use current user
+  const profileUser = id ? users.find(user => user.id === id) : currentUser;
   
-  const isCurrentUser = currentUser && currentUser.id === id;
+  // Check if viewing own profile
+  const isOwnProfile = currentUser && (!id || id === currentUser.id);
   
-  const profileUserId = id || (currentUser ? currentUser.id : '');
-  const user = getUserById(profileUserId);
-  
-  useEffect(() => {
-    if (isOwnProfile && !isAuthenticated) {
-      navigate('/auth/login');
-    }
-  }, [isOwnProfile, isAuthenticated, navigate]);
-  
-  if (!user) {
+  if (!profileUser) {
     return (
-      <div className="min-h-screen pt-20 px-4">
-        <div className="container mx-auto py-16 text-center">
-          <h1 className="text-2xl font-bold mb-4">Пользователь не найден</h1>
-          <p className="text-muted-foreground mb-6">Пользователь, которого вы ищете, не существует или был удален.</p>
-          <Link to="/">
-            <Button>Вернуться на главную</Button>
-          </Link>
+      <div className="min-h-screen pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">Пользователь не найден</h1>
+          <p className="text-muted-foreground">
+            Запрашиваемый профиль не существует или был удален.
+          </p>
         </div>
       </div>
     );
   }
   
-  const userTeams = teams.filter(team => team.members.some(member => member.id === user.id));
+  // Get teams for user
+  const userTeams = getTeamsForUser(profileUser.id);
   
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
-  };
-  
+  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('ru-RU', { 
+    return new Intl.DateTimeFormat('ru-RU', {
       year: 'numeric',
-      month: 'long'
-    });
-  };
-  
-  const getHackathonName = (id: string) => {
-    const hackathon = getHackathonById(id);
-    return hackathon ? hackathon.name : 'Неизвестный хакатон';
-  };
-  
-  const handleLogout = () => {
-    logout();
-    navigate('/');
+      month: 'long',
+      day: 'numeric'
+    }).format(date);
   };
   
   return (
     <div className="min-h-screen pt-20">
       <div className="container mx-auto px-4 py-12">
-        <FadeIn delay={100}>
-          <div className="mb-8">
-            <div className="flex flex-col md:flex-row md:items-center gap-6">
-              <Avatar className="w-24 h-24 border border-border">
-                <AvatarImage src={user.photoUrl} alt={user.name} />
-                <AvatarFallback className="text-2xl">
-                  {getInitials(user.name)}
-                </AvatarFallback>
-              </Avatar>
+        <FadeIn>
+          <div className="max-w-4xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-8 mb-8">
+              {/* Profile Header */}
+              <div className="flex-shrink-0 flex flex-col items-center md:items-start">
+                <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
+                  <AvatarImage src={profileUser.photoUrl} alt={profileUser.name} />
+                  <AvatarFallback>{profileUser.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                
+                {isOwnProfile && (
+                  <Button variant="outline" className="mt-4 w-full">
+                    Редактировать профиль
+                  </Button>
+                )}
+              </div>
               
               <div className="flex-1">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <div>
-                    <h1 className="text-3xl font-bold">{user.name}</h1>
-                    <p className="text-muted-foreground">
-                      Участник с {formatDate(user.createdAt)}
-                    </p>
-                  </div>
-                  
-                  {isOwnProfile && (
-                    <div className="flex gap-2">
-                      <Button variant="outline" className="sm:w-auto gap-1">
-                        <Pencil size={16} />
-                        <span>Редактировать профиль</span>
-                      </Button>
-                      <Button variant="destructive" className="sm:w-auto" onClick={handleLogout}>
-                        Выйти
-                      </Button>
-                    </div>
-                  )}
-                </div>
+                <h1 className="text-3xl font-bold mb-2">{profileUser.name}</h1>
                 
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {user.tags.map((tag, i) => (
-                    <Badge key={i} variant="secondary" className="font-normal">
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {profileUser.tags.map((tag, index) => (
+                    <Badge key={index} variant="secondary">
                       {tag}
                     </Badge>
                   ))}
                 </div>
+                
+                <p className="text-muted-foreground mb-4">
+                  {profileUser.bio}
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 text-sm text-muted-foreground">
+                  {profileUser.location && (
+                    <div className="flex items-center gap-1">
+                      <MapPin size={16} />
+                      <span>{profileUser.location}</span>
+                    </div>
+                  )}
+                  
+                  {profileUser.website && (
+                    <div className="flex items-center gap-1">
+                      <Globe size={16} />
+                      <a 
+                        href={profileUser.website.startsWith('http') ? profileUser.website : `https://${profileUser.website}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors"
+                      >
+                        {profileUser.website.replace(/https?:\/\/(www\.)?/, '')}
+                      </a>
+                    </div>
+                  )}
+                  
+                  {profileUser.github && (
+                    <div className="flex items-center gap-1">
+                      <Github size={16} />
+                      <a 
+                        href={`https://github.com/${profileUser.github}`} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="hover:text-primary transition-colors"
+                      >
+                        {profileUser.github}
+                      </a>
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-1">
+                    <Calendar size={16} />
+                    <span>На сайте с {formatDate(profileUser.createdAt)}</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </FadeIn>
-        
-        {isCurrentUser && user.invitations && user.invitations.filter(inv => inv.status === 'pending').length > 0 && (
-          <TeamInvitations 
-            userId={user.id} 
-            invitations={user.invitations.filter(inv => inv.status === 'pending')} 
-          />
-        )}
-        
-        <div className="flex flex-col lg:flex-row gap-8">
-          <div className="flex-1">
-            <Tabs defaultValue="teams" value={activeTab} onValueChange={setActiveTab}>
-              <TabsList>
-                <TabsTrigger value="teams" className="gap-1">
-                  <Users size={16} />
-                  <span>Команды</span>
+            
+            {/* Show invitations on own profile */}
+            {isOwnProfile && profileUser.invitations && profileUser.invitations.length > 0 && (
+              <TeamInvitations 
+                userId={profileUser.id} 
+                invitations={profileUser.invitations.filter(inv => inv.status === 'pending')} 
+              />
+            )}
+            
+            {/* Tabs */}
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
+              <TabsList className="grid w-full grid-cols-2 md:w-auto md:inline-flex">
+                <TabsTrigger value="info">
+                  Информация
                 </TabsTrigger>
-                <TabsTrigger value="about" className="gap-1">
-                  <User size={16} />
-                  <span>О пользователе</span>
+                <TabsTrigger value="teams">
+                  Команды {userTeams.length > 0 && `(${userTeams.length})`}
                 </TabsTrigger>
               </TabsList>
               
-              <TabsContent value="teams" className="animate-fade-in mt-6">
-                <div className="space-y-6">
-                  <h2 className="text-2xl font-semibold">Команды</h2>
-                  
-                  {userTeams.length > 0 ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      <StaggerContainer initialDelay={200} staggerDelay={100}>
-                        {userTeams.map((team, index) => (
-                          <TeamCard 
-                            key={team.id} 
-                            team={team} 
-                            index={index}
-                            hackathonName={getHackathonName(team.hackathonId)} 
-                          />
+              {/* Info Tab */}
+              <TabsContent value="info" className="mt-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Навыки</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {profileUser.skills && profileUser.skills.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {profileUser.skills.map((skill, index) => (
+                          <Badge key={index} variant="outline" className="px-3 py-1">
+                            {skill}
+                          </Badge>
                         ))}
-                      </StaggerContainer>
-                    </div>
-                  ) : (
-                    <Card className="border border-dashed">
-                      <CardContent className="flex flex-col items-center justify-center py-12">
-                        <div className="text-center space-y-3">
-                          <h3 className="text-lg font-medium">Нет команд</h3>
-                          <p className="text-muted-foreground max-w-md mx-auto">
-                            {isOwnProfile ? 
-                              "Вы еще не присоединились ни к одной команде. Просмотрите хакатоны и присоединитесь или создайте команду." : 
-                              "Этот пользователь еще не присоединился ни к одной команде."}
-                          </p>
-                          {isOwnProfile && (
-                            <Link to="/hackathons">
-                              <Button>Просмотреть хакатоны</Button>
-                            </Link>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </div>
+                      </div>
+                    ) : (
+                      <p className="text-muted-foreground">Не указаны навыки</p>
+                    )}
+                  </CardContent>
+                </Card>
               </TabsContent>
               
-              <TabsContent value="about" className="animate-fade-in mt-6">
-                <div className="space-y-8">
-                  <div>
-                    <h2 className="text-2xl font-semibold mb-4">О пользователе</h2>
-                    <p className="text-muted-foreground">{user.bio}</p>
+              {/* Teams Tab */}
+              <TabsContent value="teams" className="mt-6">
+                {userTeams.length > 0 ? (
+                  <div className="space-y-4">
+                    {userTeams.map(team => (
+                      <Card key={team.id}>
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-xl">{team.name}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-muted-foreground mb-3">
+                            {team.description}
+                          </p>
+                          
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {team.tags.map((tag, index) => (
+                              <Badge key={index} variant="secondary">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                          
+                          <div className="flex items-center text-sm">
+                            <span className="text-muted-foreground">
+                              Участники: {team.members.length}/{team.maxMembers}
+                            </span>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
-                  
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4">Навыки и экспертиза</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {user.skills?.map((skill, index) => (
-                        <Badge key={index} className="font-normal">
-                          {skill}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+                ) : (
+                  <Card>
+                    <CardContent className="py-8 flex flex-col items-center text-center">
+                      <h3 className="text-lg font-medium mb-2">
+                        {isOwnProfile ? "Вы не состоите ни в одной команде" : "Пользователь не состоит ни в одной команде"}
+                      </h3>
+                      <p className="text-muted-foreground max-w-md mx-auto">
+                        {isOwnProfile 
+                          ? "Присоединитесь к команде или создайте свою, чтобы участвовать в хакатонах с единомышленниками."
+                          : "Этот пользователь пока не вступил ни в одну команду."}
+                      </p>
+                      
+                      {isOwnProfile && (
+                        <Button className="mt-4">
+                          Создать команду
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
               </TabsContent>
             </Tabs>
           </div>
-          
-          <div className="w-full lg:w-80">
-            <Card>
-              <CardContent className="p-5 space-y-5">
-                <h3 className="font-semibold">Контактная информация</h3>
-                
-                <div className="space-y-4">
-                  {user.location && (
-                    <div className="flex items-start">
-                      <MapPin size={18} className="mr-3 text-muted-foreground mt-0.5" />
-                      <div>
-                        <div className="font-medium text-sm">Местоположение</div>
-                        <div className="text-sm text-muted-foreground">{user.location}</div>
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="flex items-start">
-                    <Mail size={18} className="mr-3 text-muted-foreground mt-0.5" />
-                    <div>
-                      <div className="font-medium text-sm">Email</div>
-                      <a href={`mailto:${user.email}`} className="text-sm text-primary hover:underline">
-                        {user.email}
-                      </a>
-                    </div>
-                  </div>
-                  
-                  {user.github && (
-                    <div className="flex items-start">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                        className="mr-3 text-muted-foreground mt-0.5 h-[18px] w-[18px]"
-                      >
-                        <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-                        <path d="M9 18c-4.51 2-5-2-7-2" />
-                      </svg>
-                      <div>
-                        <div className="font-medium text-sm">GitHub</div>
-                        <a 
-                          href={`https://github.com/${user.github}`} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-sm text-primary hover:underline"
-                        >
-                          @{user.github}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {user.website && (
-                    <div className="flex items-start">
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        strokeWidth="2" 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round"
-                        className="mr-3 text-muted-foreground mt-0.5 h-[18px] w-[18px]"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <line x1="2" x2="22" y1="12" y2="12" />
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                      </svg>
-                      <div>
-                        <div className="font-medium text-sm">Веб-сайт</div>
-                        <a 
-                          href={user.website} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-sm text-primary hover:underline"
-                        >
-                          {user.website.replace(/(^\w+:|^)\/\//, '')}
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                {!isOwnProfile && (
-                  <div className="pt-2">
-                    <Button className="w-full">Пригласить в команду</Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+        </FadeIn>
       </div>
     </div>
   );

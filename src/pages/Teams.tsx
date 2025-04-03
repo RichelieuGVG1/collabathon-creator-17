@@ -135,9 +135,9 @@ const Teams = () => {
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {allTags.map(tag => (
+                {allTags.map((tag, index) => (
                   <Badge
-                    key={tag}
+                    key={index}
                     variant={activeFilters.includes(tag) ? "default" : "outline"}
                     className="cursor-pointer"
                     onClick={() => toggleFilter(tag)}
@@ -156,9 +156,9 @@ const Teams = () => {
           {activeFilters.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 mb-6 animate-fade-in">
               <span className="text-sm text-muted-foreground">Активные фильтры:</span>
-              {activeFilters.map(filter => (
+              {activeFilters.map((filter, index) => (
                 <Badge
-                  key={filter}
+                  key={index}
                   variant="secondary"
                   className="flex items-center gap-1 pl-2 pr-1"
                 >

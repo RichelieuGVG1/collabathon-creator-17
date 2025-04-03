@@ -1,28 +1,64 @@
 
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 import { FadeIn, StaggerContainer } from '@/components/Animations';
-import { useUserStore, useTeamStore, useAuthStore } from '@/lib/store';
+import { useAuthStore, useTeamStore } from '@/lib/store';
 import UserCard from '@/components/UserCard';
-import { Search, Filter, Plus, X, ArrowLeft } from 'lucide-react';
+import { Search, Filter, ArrowLeft, X, Check } from 'lucide-react';
 
 const UsersWithoutTeam = () => {
-  const { teamId } = useParams<{ teamId: string }>();
-  const { users, getUsersWithoutTeam } = useUserStore();
-  const { getTeamById } = useTeamStore();
-  const { currentUser } = useAuthStore();
-  const team = teamId ? getTeamById(teamId) : null;
+  const { teamId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  
+  const isInviteMode = Boolean(teamId);
+  const { users, currentUser } = useAuthStore();
+  const { teams, getTeamById, sendTeamInvitation } = useTeamStore();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [invitingSent, setInvitingSent] = useState<Record<string, boolean>>({});
   
-  // Get all users without team
-  const usersWithoutTeam = getUsersWithoutTeam();
+  const team = isInviteMode ? getTeamById(teamId || '') : null;
+  
+  // If in invite mode but team not found, redirect back
+  useEffect(() => {
+    if (isInviteMode && !team) {
+      navigate('/teams');
+    }
+  }, [isInviteMode, team, navigate]);
+  
+  // Filter users who don't have a team
+  const usersWithoutTeam = users.filter(user => {
+    // Exclude current user
+    if (currentUser && user.id === currentUser.id) return false;
+    
+    // Check if user is not in any team
+    const userHasTeam = teams.some(team => 
+      team.members.some(member => member.id === user.id)
+    );
+    
+    // If in invite mode, exclude users who are already in this team
+    if (isInviteMode && team) {
+      const alreadyInTeam = team.members.some(member => member.id === user.id);
+      if (alreadyInTeam) return false;
+      
+      // Check if user already has a pending invitation to this team
+      const hasPendingInvitation = user.invitations?.some(
+        inv => inv.teamId === team.id && inv.status === 'pending'
+      );
+      if (hasPendingInvitation) return false;
+    }
+    
+    return !userHasTeam;
+  });
   
   // Get all available tags from users
   const allTags = Array.from(
@@ -36,8 +72,7 @@ const UsersWithoutTeam = () => {
       searchQuery === '' ||
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.bio.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (user.location && user.location.toLowerCase().includes(searchQuery.toLowerCase()));
+      user.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     
     // Tag filters
     const matchesFilters = 
@@ -62,8 +97,35 @@ const UsersWithoutTeam = () => {
     setSearchQuery('');
   };
   
-  // Check if user can invite
-  const canInvite = teamId && team && currentUser && (team.createdBy === currentUser.id || team.members.some(m => m.id === currentUser.id));
+  // Handle sending invitations
+  const handleInvite = (userId: string) => {
+    if (!isInviteMode || !team || !currentUser) return;
+    
+    // Send invitation
+    const success = sendTeamInvitation({
+      id: `inv-${Date.now()}`,
+      teamId: team.id,
+      userId: userId,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    });
+    
+    if (success) {
+      // Mark as invited for UI feedback
+      setInvitingSent(prev => ({ ...prev, [userId]: true }));
+      
+      toast({
+        title: "Приглашение отправлено",
+        description: "Пользователь получит уведомление о вашем приглашении.",
+      });
+    } else {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось отправить приглашение. Попробуйте еще раз.",
+        variant: "destructive",
+      });
+    }
+  };
   
   return (
     <div className="min-h-screen pt-20">
@@ -72,24 +134,23 @@ const UsersWithoutTeam = () => {
         <FadeIn delay={100}>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              {teamId && (
-                <div className="mb-4">
-                  <Link to={`/teams/${teamId}`} className="flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors mb-4">
-                    <ArrowLeft size={16} className="mr-1" />
-                    <span>Вернуться к команде</span>
-                  </Link>
-                </div>
-              )}
+              <div className="flex items-center gap-2 mb-2">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => navigate(isInviteMode ? `/teams/${teamId}` : '/teams')}
+                >
+                  <ArrowLeft size={20} />
+                </Button>
+                <h1 className="text-3xl sm:text-4xl font-bold">
+                  {isInviteMode ? "Пригласить участников" : "Участники без команды"}
+                </h1>
+              </div>
               
-              <h1 className="text-3xl sm:text-4xl font-bold mb-2">
-                {teamId 
-                  ? `Пригласить участников в "${team?.name}"` 
-                  : "Участники без команды"}
-              </h1>
               <p className="text-muted-foreground">
-                {teamId 
-                  ? "Пригласите талантливых участников присоединиться к вашей команде"
-                  : "Найдите участников, которые еще не состоят в команде"}
+                {isInviteMode
+                  ? `Найдите участников для команды «${team?.name}»`
+                  : "Найдите участников, которые еще не присоединились к командам"}
               </p>
             </div>
           </div>
@@ -128,7 +189,7 @@ const UsersWithoutTeam = () => {
           {showFilters && (
             <div className="bg-secondary/50 rounded-lg p-4 mb-6 animate-fade-in">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-medium">Фильтр по тегам</h3>
+                <h3 className="font-medium">Фильтр по навыкам</h3>
                 {activeFilters.length > 0 && (
                   <Button variant="ghost" size="sm" onClick={clearFilters} className="h-7 text-xs">
                     Очистить все
@@ -137,9 +198,9 @@ const UsersWithoutTeam = () => {
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {allTags.map(tag => (
+                {allTags.map((tag, index) => (
                   <Badge
-                    key={tag}
+                    key={index}
                     variant={activeFilters.includes(tag) ? "default" : "outline"}
                     className="cursor-pointer"
                     onClick={() => toggleFilter(tag)}
@@ -158,9 +219,9 @@ const UsersWithoutTeam = () => {
           {activeFilters.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 mb-6 animate-fade-in">
               <span className="text-sm text-muted-foreground">Активные фильтры:</span>
-              {activeFilters.map(filter => (
+              {activeFilters.map((filter, index) => (
                 <Badge
-                  key={filter}
+                  key={index}
                   variant="secondary"
                   className="flex items-center gap-1 pl-2 pr-1"
                 >
@@ -187,7 +248,7 @@ const UsersWithoutTeam = () => {
           )}
         </div>
         
-        {/* User Listing */}
+        {/* Users Listing */}
         {filteredUsers.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <StaggerContainer initialDelay={200} staggerDelay={100}>
@@ -196,8 +257,14 @@ const UsersWithoutTeam = () => {
                   key={user.id} 
                   user={user} 
                   index={index}
-                  showAddButton={canInvite}
-                  teamId={teamId}
+                  action={
+                    isInviteMode ? {
+                      label: invitingSent[user.id] ? "Приглашение отправлено" : "Пригласить в команду",
+                      icon: invitingSent[user.id] ? Check : null,
+                      onClick: () => handleInvite(user.id),
+                      disabled: invitingSent[user.id]
+                    } : undefined
+                  }
                 />
               ))}
             </StaggerContainer>
@@ -214,11 +281,7 @@ const UsersWithoutTeam = () => {
                   <Button variant="outline" onClick={clearFilters}>
                     Очистить все фильтры
                   </Button>
-                ) : (
-                  <p className="text-muted-foreground">
-                    Похоже, все участники уже состоят в командах.
-                  </p>
-                )}
+                ) : null}
               </div>
             </CardContent>
           </Card>
