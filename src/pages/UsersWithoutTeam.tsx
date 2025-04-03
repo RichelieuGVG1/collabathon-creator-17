@@ -1,39 +1,39 @@
 
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { FadeIn, StaggerContainer } from '@/components/Animations';
-import { useAuthStore, useTeamStore } from '@/lib/store';
+import { useAuthStore, useTeamStore, useUserStore } from '@/lib/store';
 import UserCard from '@/components/UserCard';
 import { Search, Filter, ArrowLeft, X, Check } from 'lucide-react';
 
 const UsersWithoutTeam = () => {
   const { teamId } = useParams();
-  const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   
   const isInviteMode = Boolean(teamId);
-  const { users, currentUser } = useAuthStore();
-  const { teams, getTeamById, sendTeamInvitation } = useTeamStore();
+  const { currentUser } = useAuthStore();
+  const { users, getUserById } = useUserStore();
+  const { teams, getTeamById, inviteUserToTeam } = useTeamStore();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [invitingSent, setInvitingSent] = useState<Record<string, boolean>>({});
   
-  const team = isInviteMode ? getTeamById(teamId || '') : null;
+  const team = isInviteMode && teamId ? getTeamById(teamId) : null;
   
   // If in invite mode but team not found, redirect back
-  useEffect(() => {
+  useState(() => {
     if (isInviteMode && !team) {
       navigate('/teams');
     }
-  }, [isInviteMode, team, navigate]);
+  });
   
   // Filter users who don't have a team
   const usersWithoutTeam = users.filter(user => {
@@ -99,16 +99,10 @@ const UsersWithoutTeam = () => {
   
   // Handle sending invitations
   const handleInvite = (userId: string) => {
-    if (!isInviteMode || !team || !currentUser) return;
+    if (!isInviteMode || !team || !teamId) return;
     
     // Send invitation
-    const success = sendTeamInvitation({
-      id: `inv-${Date.now()}`,
-      teamId: team.id,
-      userId: userId,
-      status: 'pending',
-      createdAt: new Date().toISOString()
-    });
+    const success = inviteUserToTeam(teamId, userId);
     
     if (success) {
       // Mark as invited for UI feedback
@@ -138,7 +132,7 @@ const UsersWithoutTeam = () => {
                 <Button 
                   variant="ghost" 
                   size="icon" 
-                  onClick={() => navigate(isInviteMode ? `/teams/${teamId}` : '/teams')}
+                  onClick={() => navigate(isInviteMode && teamId ? `/teams/${teamId}` : '/teams')}
                 >
                   <ArrowLeft size={20} />
                 </Button>
@@ -148,8 +142,8 @@ const UsersWithoutTeam = () => {
               </div>
               
               <p className="text-muted-foreground">
-                {isInviteMode
-                  ? `Найдите участников для команды «${team?.name}»`
+                {isInviteMode && team
+                  ? `Найдите участников для команды «${team.name}»`
                   : "Найдите участников, которые еще не присоединились к командам"}
               </p>
             </div>

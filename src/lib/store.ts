@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { Hackathon, Team, User, TeamInvitation } from '@/types';
 import { hackathons as initialHackathons } from '@/data/hackathons';
@@ -23,10 +24,12 @@ interface TeamState {
   teams: Team[];
   getTeamById: (id: string) => Team | undefined;
   getTeamsByHackathonId: (hackathonId: string) => Team[];
+  getTeamsForUser: (userId: string) => Team[];
   createTeam: (team: Omit<Team, 'id' | 'createdAt'>) => Team;
   joinTeam: (teamId: string, userId: string) => boolean;
   leaveTeam: (teamId: string, userId: string) => boolean;
   inviteUserToTeam: (teamId: string, userId: string) => boolean;
+  sendTeamInvitation: (invitation: TeamInvitation) => boolean;
   getUserInvitations: (userId: string) => TeamInvitation[];
   respondToInvitation: (userId: string, teamId: string, accept: boolean) => boolean;
 }
@@ -126,6 +129,11 @@ export const useTeamStore = create<TeamState>()((set, get) => ({
   getTeamsByHackathonId: (hackathonId) => {
     return get().teams.filter(t => t.hackathonId === hackathonId);
   },
+  getTeamsForUser: (userId) => {
+    return get().teams.filter(team => 
+      team.members.some(member => member.id === userId)
+    );
+  },
   createTeam: (teamData) => {
     const newTeam: Team = {
       id: `team-${Date.now()}`,
@@ -188,6 +196,9 @@ export const useTeamStore = create<TeamState>()((set, get) => ({
     
     set({ teams: updatedTeams });
     return true;
+  },
+  sendTeamInvitation: (invitation) => {
+    return get().inviteUserToTeam(invitation.teamId, invitation.userId);
   },
   inviteUserToTeam: (teamId, userId) => {
     const users = useUserStore.getState().users;

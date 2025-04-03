@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -7,18 +6,19 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FadeIn } from '@/components/Animations';
-import { useAuthStore, useTeamStore } from '@/lib/store';
+import { useAuthStore, useTeamStore, useUserStore } from '@/lib/store';
 import { MapPin, Globe, Github, Calendar } from 'lucide-react';
 import TeamInvitations from '@/components/TeamInvitations';
 
 const Profile = () => {
   const { id } = useParams();
-  const { users, currentUser } = useAuthStore();
-  const { getTeamsForUser } = useTeamStore();
+  const { users, getUserById } = useUserStore();
+  const { currentUser } = useAuthStore();
+  const { teams } = useTeamStore();
   const [activeTab, setActiveTab] = useState('info');
   
   // Find the user either by ID or use current user
-  const profileUser = id ? users.find(user => user.id === id) : currentUser;
+  const profileUser = id ? getUserById(id) : currentUser;
   
   // Check if viewing own profile
   const isOwnProfile = currentUser && (!id || id === currentUser.id);
@@ -37,7 +37,9 @@ const Profile = () => {
   }
   
   // Get teams for user
-  const userTeams = getTeamsForUser(profileUser.id);
+  const userTeams = teams.filter(team => 
+    team.members.some(member => member.id === profileUser.id)
+  );
   
   // Format date
   const formatDate = (dateString: string) => {

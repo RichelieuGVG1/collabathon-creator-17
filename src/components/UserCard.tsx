@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useTeamStore, useAuthStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
+import { LucideIcon } from 'lucide-react';
 
 interface UserCardProps {
   user: User;
@@ -15,9 +16,15 @@ interface UserCardProps {
   showAddButton?: boolean;
   onAddClick?: () => void;
   teamId?: string;
+  action?: {
+    label: string;
+    icon?: LucideIcon | null;
+    onClick: () => void;
+    disabled?: boolean;
+  };
 }
 
-const UserCard = ({ user, index = 0, showAddButton = false, onAddClick, teamId }: UserCardProps) => {
+const UserCard = ({ user, index = 0, showAddButton = false, onAddClick, teamId, action }: UserCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
   const { inviteUserToTeam } = useTeamStore();
@@ -124,7 +131,20 @@ const UserCard = ({ user, index = 0, showAddButton = false, onAddClick, teamId }
               )}
             </div>
             
-            {showAddButton && teamId && (
+            {action && (
+              <Button 
+                size="sm" 
+                variant={action.disabled ? "secondary" : "outline"}
+                className="mt-2"
+                onClick={action.onClick}
+                disabled={action.disabled}
+              >
+                {action.icon && <action.icon className="mr-2 h-4 w-4" />}
+                {action.label}
+              </Button>
+            )}
+            
+            {showAddButton && teamId && !action && (
               <Button 
                 size="sm" 
                 variant={isAlreadyInvited ? "secondary" : "outline"}
@@ -140,7 +160,7 @@ const UserCard = ({ user, index = 0, showAddButton = false, onAddClick, teamId }
               </Button>
             )}
             
-            {onAddClick && !teamId && (
+            {onAddClick && !teamId && !action && (
               <Button 
                 size="sm" 
                 variant="outline" 
