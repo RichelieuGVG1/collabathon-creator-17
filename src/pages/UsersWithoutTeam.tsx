@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import { FadeIn, StaggerContainer } from '@/components/Animations';
 import { useAuthStore, useTeamStore, useUserStore } from '@/lib/store';
 import UserCard from '@/components/UserCard';
 import { Search, Filter, ArrowLeft, X, Check } from 'lucide-react';
+import { User } from '@/types';
 
 const UsersWithoutTeam = () => {
   const { teamId } = useParams();
@@ -29,11 +30,11 @@ const UsersWithoutTeam = () => {
   const team = isInviteMode && teamId ? getTeamById(teamId) : null;
   
   // If in invite mode but team not found, redirect back
-  useState(() => {
+  useEffect(() => {
     if (isInviteMode && !team) {
       navigate('/teams');
     }
-  });
+  }, [isInviteMode, team, navigate]);
   
   // Filter users who don't have a team
   const usersWithoutTeam = users.filter(user => {
@@ -60,9 +61,9 @@ const UsersWithoutTeam = () => {
     return !userHasTeam;
   });
   
-  // Get all available tags from users
-  const allTags = Array.from(
-    new Set(usersWithoutTeam.flatMap(user => user.tags))
+  // Get all available tags from users with explicit typing
+  const allTags: string[] = Array.from(
+    new Set(usersWithoutTeam.flatMap(user => user.tags as string[]))
   ).sort();
   
   // Filter users based on search query and filters
