@@ -1,6 +1,6 @@
 
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,120 +9,24 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FadeIn, SlideUp, StaggerContainer } from '@/components/Animations';
 import TeamCard from '@/components/TeamCard';
 import { Calendar, MapPin, Users, Clock, Globe, Building, ChevronLeft, Plus } from 'lucide-react';
-
-// Mock data - using the data from Hackathons page
-const hackathons = [
-  {
-    id: '1',
-    name: 'Глобальный хакатон инноваций в ИИ',
-    description: 'Присоединяйтесь к крупнейшему хакатону по искусственному интеллекту и создавайте решения, которые будут формировать будущее ИИ. Участники будут решать реальные проблемы и разрабатывать передовые приложения ИИ, которые могут потенциально трансформировать отрасли.\n\nЭтот хакатон идеально подходит для энтузиастов ИИ, инженеров машинного обучения, специалистов по данным и всех, кто заинтересован в расширении границ возможностей ИИ. Независимо от того, являетесь ли вы опытным профессионалом или только начинаете работать в этой области, это мероприятие предлагает ценные возможности для обучения, создания сети контактов и демонстрации ваших талантов.',
-    startDate: '2023-09-15',
-    endDate: '2023-09-18',
-    location: 'Виртуально',
-    tags: ['ИИ', 'Машинное обучение', 'Инновации'],
-    imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'Альянс ИИ',
-    organizerLogo: 'https://via.placeholder.com/40',
-    teamSize: {
-      min: 2,
-      max: 5
-    },
-    website: 'https://example.com/hackathon',
-    prizes: [
-      {
-        place: '1-е место',
-        description: 'Денежный приз $10,000 + кредиты для вычислений ИИ',
-      },
-      {
-        place: '2-е место',
-        description: 'Денежный приз $5,000 + возможности менторства',
-      },
-      {
-        place: '3-е место',
-        description: 'Денежный приз $2,500 + лицензии на продукты',
-      }
-    ],
-    schedule: [
-      {
-        date: '2023-09-15',
-        time: '10:00 - 11:00',
-        title: 'Церемония открытия',
-        description: 'Приветственное обращение и введение в задачи хакатона.'
-      },
-      {
-        date: '2023-09-15',
-        time: '11:30 - 12:30',
-        title: 'Формирование команд',
-        description: 'Сессия нетворкинга для формирования команд участниками.'
-      },
-      {
-        date: '2023-09-15',
-        time: '13:00',
-        title: 'Начало хакатона',
-        description: 'Начало разработки проектов!'
-      },
-      {
-        date: '2023-09-17',
-        time: '17:00',
-        title: 'Срок подачи проектов',
-        description: 'Все проекты должны быть представлены к этому времени.'
-      },
-      {
-        date: '2023-09-18',
-        time: '10:00 - 13:00',
-        title: 'Презентации проектов',
-        description: 'Команды представляют свои проекты судьям и другим участникам.'
-      },
-      {
-        date: '2023-09-18',
-        time: '15:00 - 16:00',
-        title: 'Церемония награждения',
-        description: 'Объявление победителей и распределение призов.'
-      }
-    ]
-  },
-  // Additional hackathons...
-];
-
-// Mock teams for this hackathon
-const teams = [
-  {
-    id: '1',
-    hackathonId: '1',
-    name: 'Волшебники данных',
-    description: 'Команда специалистов по данным и инженеров машинного обучения, создающих инструменты ИИ нового поколения.',
-    tags: ['Python', 'TensorFlow', 'NLP'],
-    members: [
-      {id: '1', name: 'Алекс Джонсон', email: 'alex@example.com', bio: 'Инженер МО', tags: [], photoUrl: '', createdAt: '2023-01-15'},
-      {id: '2', name: 'Сэм Уилсон', email: 'sam@example.com', bio: 'Специалист по данным', tags: [], photoUrl: '', createdAt: '2023-02-10'},
-      {id: '3', name: 'Тэйлор Ким', email: 'taylor@example.com', bio: 'Исследователь ИИ', tags: [], photoUrl: '', createdAt: '2023-01-05'}
-    ],
-    maxMembers: 5,
-    createdBy: '1',
-    createdAt: '2023-08-01'
-  },
-  {
-    id: '3',
-    hackathonId: '1',
-    name: 'Инноваторы ИИ',
-    description: 'Фокусируемся на разработке инновационных решений ИИ с практическим применением в здравоохранении и образовании.',
-    tags: ['ИИ', 'Здравоохранение', 'Образование'],
-    members: [
-      {id: '6', name: 'Райли Чен', email: 'riley@example.com', bio: 'Специалист по ИИ', tags: [], photoUrl: '', createdAt: '2023-02-05'},
-      {id: '7', name: 'Джордан Ли', email: 'jordan@example.com', bio: 'Backend разработчик', tags: [], photoUrl: '', createdAt: '2023-03-15'}
-    ],
-    maxMembers: 4,
-    createdBy: '6',
-    createdAt: '2023-08-10'
-  }
-];
+import { useHackathonStore, useTeamStore, useAuthStore } from '@/lib/store';
+import { useToast } from '@/hooks/use-toast';
 
 const HackathonDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('info');
   
+  const { getHackathonById } = useHackathonStore();
+  const { teams, getTeamsByHackathonId } = useTeamStore();
+  const { isAuthenticated } = useAuthStore();
+  
   // Find the hackathon based on the URL param
-  const hackathon = hackathons.find(h => h.id === id);
+  const hackathon = id ? getHackathonById(id) : undefined;
+  
+  // Filter teams for this hackathon
+  const hackathonTeams = id ? getTeamsByHackathonId(id) : [];
   
   // If hackathon not found
   if (!hackathon) {
@@ -139,9 +43,6 @@ const HackathonDetail = () => {
     );
   }
   
-  // Filter teams for this hackathon
-  const hackathonTeams = teams.filter(team => team.hackathonId === hackathon.id);
-  
   // Format date range
   const formatDateRange = (start: string, end: string) => {
     const startDate = new Date(start);
@@ -154,6 +55,19 @@ const HackathonDetail = () => {
     };
     
     return `${startDate.toLocaleDateString('ru-RU', options)} - ${endDate.toLocaleDateString('ru-RU', options)}`;
+  };
+
+  const handleCreateTeam = () => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Требуется авторизация",
+        description: "Войдите в аккаунт, чтобы создать команду",
+      });
+      navigate('/auth/login');
+      return;
+    }
+    
+    navigate(`/teams/create?hackathon=${id}`);
   };
   
   return (
@@ -259,12 +173,13 @@ const HackathonDetail = () => {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-semibold">Команды</h2>
-                    <Link to="/teams/create">
-                      <Button className="gap-1">
-                        <Plus size={16} />
-                        <span>Создать команду</span>
-                      </Button>
-                    </Link>
+                    <Button 
+                      className="gap-1"
+                      onClick={handleCreateTeam}
+                    >
+                      <Plus size={16} />
+                      <span>Создать команду</span>
+                    </Button>
                   </div>
                   
                   {hackathonTeams.length > 0 ? (
@@ -283,9 +198,11 @@ const HackathonDetail = () => {
                           <p className="text-muted-foreground max-w-md mx-auto">
                             Будьте первым, кто создаст команду для этого хакатона и начнет искать участников!
                           </p>
-                          <Link to="/teams/create">
-                            <Button>Создать команду</Button>
-                          </Link>
+                          <Button 
+                            onClick={handleCreateTeam}
+                          >
+                            Создать команду
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -392,12 +309,13 @@ const HackathonDetail = () => {
                 </div>
                 
                 <div className="pt-2">
-                  <Link to="/teams/create">
-                    <Button className="w-full gap-1">
-                      <Plus size={16} />
-                      <span>Создать команду</span>
-                    </Button>
-                  </Link>
+                  <Button 
+                    className="w-full gap-1"
+                    onClick={handleCreateTeam}
+                  >
+                    <Plus size={16} />
+                    <span>Создать команду</span>
+                  </Button>
                 </div>
               </CardContent>
             </Card>

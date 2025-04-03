@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Hackathons from "./pages/Hackathons";
 import HackathonDetail from "./pages/HackathonDetail";
 import Teams from "./pages/Teams";
+import TeamDetail from "./pages/TeamDetail";
+import CreateTeamForm from "./components/CreateTeamForm";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
@@ -27,6 +29,8 @@ const App = () => (
           <Route path="/hackathons" element={<Hackathons />} />
           <Route path="/hackathons/:id" element={<HackathonDetail />} />
           <Route path="/teams" element={<Teams />} />
+          <Route path="/teams/:id" element={<TeamDetail />} />
+          <Route path="/teams/create" element={<CreateTeamForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:id" element={<Profile />} />
           <Route path="/auth/login" element={<Auth />} />

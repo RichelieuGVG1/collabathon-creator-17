@@ -1,13 +1,26 @@
 
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Search, Menu, X } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useAuthStore } from '@/lib/store';
+import { Search, Menu, X, User, LogOut } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  
+  const { isAuthenticated, currentUser, logout } = useAuthStore();
 
   // Check if the user is at the current route
   const isActive = (path: string) => location.pathname === path;
@@ -21,6 +34,25 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+  
+  // Get user initials
+  const getUserInitials = () => {
+    if (!currentUser || !currentUser.name) return '';
+    
+    return currentUser.name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
+  };
+  
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <header 
@@ -50,17 +82,45 @@ const Navbar = () => {
             <Search size={18} />
           </Button>
           
-          <Link to="/auth/login">
-            <Button variant="ghost" size="sm" className="font-medium">
-              Войти
-            </Button>
-          </Link>
-          
-          <Link to="/auth/register">
-            <Button className="font-medium">
-              Регистрация
-            </Button>
-          </Link>
+          {isAuthenticated && currentUser ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-0 h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={currentUser.photoUrl} alt={currentUser.name} />
+                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>{currentUser.name}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => navigate('/profile')}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Мой профиль</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Выйти</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link to="/auth/login">
+                <Button variant="ghost" size="sm" className="font-medium">
+                  Войти
+                </Button>
+              </Link>
+              
+              <Link to="/auth/register">
+                <Button className="font-medium">
+                  Регистрация
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -105,14 +165,36 @@ const Navbar = () => {
             >
               Команды
             </Link>
-            <div className="pt-2 flex items-center space-x-2 border-t border-border">
-              <Link to="/auth/login" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full">Войти</Button>
-              </Link>
-              <Link to="/auth/register" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="w-full">Регистрация</Button>
-              </Link>
-            </div>
+            
+            {isAuthenticated && currentUser ? (
+              <>
+                <Link 
+                  to="/profile" 
+                  className={`py-2 px-3 rounded-md transition-colors ${
+                    isActive('/profile') ? 'bg-secondary font-medium' : 'hover:bg-secondary/50'
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Мой профиль
+                </Link>
+                <Button 
+                  variant="destructive" 
+                  className="mt-2"
+                  onClick={handleLogout}
+                >
+                  Выйти
+                </Button>
+              </>
+            ) : (
+              <div className="pt-2 flex items-center space-x-2 border-t border-border">
+                <Link to="/auth/login" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="outline" className="w-full">Войти</Button>
+                </Link>
+                <Link to="/auth/register" className="flex-1" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button className="w-full">Регистрация</Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       )}

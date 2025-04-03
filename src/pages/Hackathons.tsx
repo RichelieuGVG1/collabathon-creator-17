@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -9,138 +9,38 @@ import { FadeIn, StaggerContainer } from '@/components/Animations';
 import { Hackathon } from '@/types';
 import HackathonCard from '@/components/HackathonCard';
 import { Search, Filter, Calendar, MapPin, X } from 'lucide-react';
-
-// Mock data (expanded from Index page)
-const hackathons: Hackathon[] = [
-  {
-    id: '1',
-    name: 'Глобальный хакатон инноваций в ИИ',
-    description: 'Присоединяйтесь к крупнейшему хакатону по искусственному интеллекту и создавайте решения, которые будут формировать будущее ИИ.',
-    startDate: '2023-09-15',
-    endDate: '2023-09-18',
-    location: 'Виртуально',
-    tags: ['ИИ', 'Машинное обучение', 'Инновации'],
-    imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'Альянс ИИ',
-    organizerLogo: 'https://via.placeholder.com/40',
-    teamSize: {
-      min: 2,
-      max: 5
-    }
-  },
-  {
-    id: '2',
-    name: 'Саммит технологий для климата',
-    description: 'Разработка инновационных решений для борьбы с изменением климата и экологическими проблемами с помощью технологий.',
-    startDate: '2023-10-05',
-    endDate: '2023-10-07',
-    location: 'Сан-Франциско, Калифорния',
-    tags: ['ЭкоТехнологии', 'Устойчивое развитие', 'Экология'],
-    imageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'Альянс Климата',
-    organizerLogo: 'https://via.placeholder.com/40',
-    teamSize: {
-      min: 3,
-      max: 6
-    }
-  },
-  {
-    id: '3',
-    name: 'Хакатон разработки Web3',
-    description: 'Расширяйте границы блокчейн-технологий, создавая инновационные dApps и решения Web3.',
-    startDate: '2023-11-12',
-    endDate: '2023-11-14',
-    location: 'Виртуально',
-    tags: ['Блокчейн', 'Web3', 'Крипто'],
-    imageUrl: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'Блокчейн Фонд',
-    organizerLogo: 'https://via.placeholder.com/40',
-    teamSize: {
-      min: 2,
-      max: 4
-    }
-  },
-  {
-    id: '4',
-    name: 'Инновационный вызов в сфере здравоохранения',
-    description: 'Создавайте решения, использующие технологии для улучшения предоставления медицинской помощи, результатов лечения пациентов и медицинских исследований.',
-    startDate: '2023-09-25',
-    endDate: '2023-09-27',
-    location: 'Бостон, Массачусетс',
-    tags: ['Здравоохранение', 'ИИ', 'IoT'],
-    imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
-    organizerName: 'Инициатива МедТех',
-    organizerLogo: 'https://via.placeholder.com/40',
-    teamSize: {
-      min: 2,
-      max: 5
-    }
-  },
-  {
-    id: '5',
-    name: 'Хакатон образовательных технологий',
-    description: 'Переосмыслите будущее образования через инновационные технологические решения, которые улучшают процесс обучения.',
-    startDate: '2023-10-15',
-    endDate: '2023-10-17',
-    location: 'Чикаго, Иллинойс',
-    tags: ['ОбрТех', 'ИИ', 'UX Дизайн'],
-    imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2332&q=80',
-    organizerName: 'Альянс ОбрТех',
-    organizerLogo: 'https://via.placeholder.com/40',
-    teamSize: {
-      min: 3,
-      max: 5
-    }
-  },
-  {
-    id: '6',
-    name: 'Финтех-вызов',
-    description: 'Создавайте инновационные финансово-технологические решения, которые могут трансформировать банковское дело, платежи, инвестиции и многое другое.',
-    startDate: '2023-11-05',
-    endDate: '2023-11-07',
-    location: 'Нью-Йорк, штат Нью-Йорк',
-    tags: ['Финтех', 'Блокчейн', 'Безопасность'],
-    imageUrl: 'https://images.unsplash.com/photo-1642543348745-755807f00628?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80',
-    organizerName: 'Лаборатория финансовых инноваций',
-    organizerLogo: 'https://via.placeholder.com/40',
-    teamSize: {
-      min: 2,
-      max: 4
-    }
-  }
-];
+import { useHackathonStore } from '@/lib/store';
 
 const Hackathons = () => {
+  const { hackathons, searchHackathons } = useHackathonStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('all');
+  const [filteredHackathons, setFilteredHackathons] = useState<Hackathon[]>([]);
+  const [showFilters, setShowFilters] = useState(false);
 
-  // Filter hackathons based on search query, filters, and active tab
-  const filteredHackathons = hackathons.filter(hackathon => {
-    // Search filter
-    const matchesSearch = 
-      searchQuery === '' ||
-      hackathon.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      hackathon.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      hackathon.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+  // Update filtered hackathons when query, filters, or tab changes
+  useEffect(() => {
+    // Filter hackathons based on search query and filters
+    const filtered = searchHackathons(searchQuery, activeFilters);
     
-    // Tag filters
-    const matchesFilters = 
-      activeFilters.length === 0 ||
-      hackathon.tags.some(tag => activeFilters.includes(tag));
-    
-    // Tab filter
+    // Apply tab filter
     const today = new Date();
-    const startDate = new Date(hackathon.startDate);
     
-    if (activeTab === 'upcoming') {
-      return matchesSearch && matchesFilters && startDate > today;
-    } else if (activeTab === 'past') {
-      return matchesSearch && matchesFilters && startDate < today;
-    } else {
-      return matchesSearch && matchesFilters;
-    }
-  });
+    const tabFiltered = filtered.filter(hackathon => {
+      const startDate = new Date(hackathon.startDate);
+      
+      if (activeTab === 'upcoming') {
+        return startDate > today;
+      } else if (activeTab === 'past') {
+        return startDate < today;
+      } else {
+        return true;
+      }
+    });
+    
+    setFilteredHackathons(tabFiltered);
+  }, [searchQuery, activeFilters, activeTab, hackathons, searchHackathons]);
 
   // All available tags from hackathons
   const allTags = Array.from(
@@ -189,10 +89,7 @@ const Hackathons = () => {
             <Button
               variant="outline"
               className="flex items-center gap-2"
-              onClick={() => {
-                const filtersEl = document.getElementById('filters');
-                filtersEl?.classList.toggle('hidden');
-              }}
+              onClick={() => setShowFilters(!showFilters)}
             >
               <Filter size={16} />
               <span>Фильтры</span>
@@ -205,32 +102,34 @@ const Hackathons = () => {
           </div>
 
           {/* Filters */}
-          <div id="filters" className="hidden bg-secondary/50 rounded-lg p-4 mb-6 animate-fade-in">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-medium">Фильтр по тегам</h3>
-              {activeFilters.length > 0 && (
-                <Button variant="ghost" size="sm" onClick={clearFilters} className="h-7 text-xs">
-                  Очистить все
-                </Button>
-              )}
+          {showFilters && (
+            <div className="bg-secondary/50 rounded-lg p-4 mb-6 animate-fade-in">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-medium">Фильтр по тегам</h3>
+                {activeFilters.length > 0 && (
+                  <Button variant="ghost" size="sm" onClick={clearFilters} className="h-7 text-xs">
+                    Очистить все
+                  </Button>
+                )}
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {allTags.map(tag => (
+                  <Badge
+                    key={tag}
+                    variant={activeFilters.includes(tag) ? "default" : "outline"}
+                    className="cursor-pointer"
+                    onClick={() => toggleFilter(tag)}
+                  >
+                    {tag}
+                    {activeFilters.includes(tag) && (
+                      <X size={14} className="ml-1" />
+                    )}
+                  </Badge>
+                ))}
+              </div>
             </div>
-            
-            <div className="flex flex-wrap gap-2">
-              {allTags.map(tag => (
-                <Badge
-                  key={tag}
-                  variant={activeFilters.includes(tag) ? "default" : "outline"}
-                  className="cursor-pointer"
-                  onClick={() => toggleFilter(tag)}
-                >
-                  {tag}
-                  {activeFilters.includes(tag) && (
-                    <X size={14} className="ml-1" />
-                  )}
-                </Badge>
-              ))}
-            </div>
-          </div>
+          )}
 
           {/* Active Filters Display */}
           {activeFilters.length > 0 && (

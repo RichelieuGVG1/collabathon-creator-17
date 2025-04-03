@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+
+import { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -7,83 +8,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FadeIn, StaggerContainer } from '@/components/Animations';
 import TeamCard from '@/components/TeamCard';
-import { Calendar, MapPin, Mail, User, Users, Clock, Pencil } from 'lucide-react';
-
-// Mock data for users
-const users = [
-  {
-    id: '1',
-    name: 'Alex Johnson',
-    email: 'alex@example.com',
-    bio: 'Machine Learning Engineer with a passion for AI and data science. Experienced in Python, TensorFlow, and building scalable ML systems.',
-    tags: ['Python', 'ML', 'TensorFlow', 'Data Science', 'Cloud Computing'],
-    photoUrl: '',
-    createdAt: '2023-01-15',
-    location: 'San Francisco, CA',
-    github: 'alexj',
-    website: 'https://alexj.dev',
-    skills: ['Python', 'Machine Learning', 'TensorFlow', 'PyTorch', 'Data Science', 'SQL', 'Cloud Computing', 'Docker', 'Git']
-  },
-  // other users...
-];
-
-// Mock data for a user's teams
-const userTeams = [
-  {
-    id: '1',
-    hackathonId: '1',
-    name: 'Data Wizards',
-    description: 'A team of data scientists and machine learning engineers building the next generation of AI tools.',
-    tags: ['Python', 'TensorFlow', 'NLP'],
-    members: [
-      {id: '1', name: 'Alex Johnson', email: 'alex@example.com', bio: 'ML Engineer', tags: [], photoUrl: '', createdAt: '2023-01-15'},
-      {id: '2', name: 'Sam Wilson', email: 'sam@example.com', bio: 'Data Scientist', tags: [], photoUrl: '', createdAt: '2023-02-10'},
-      {id: '3', name: 'Taylor Kim', email: 'taylor@example.com', bio: 'AI Researcher', tags: [], photoUrl: '', createdAt: '2023-01-05'}
-    ],
-    maxMembers: 5,
-    createdBy: '1',
-    createdAt: '2023-08-01'
-  }
-];
-
-// Mock data for hackathons (simplified)
-const hackathons = [
-  {
-    id: '1',
-    name: 'Global AI Innovation Hackathon'
-  },
-  {
-    id: '2',
-    name: 'Climate Tech Summit Challenge'
-  },
-  {
-    id: '3',
-    name: 'Web3 Development Hackathon'
-  }
-];
+import { Calendar, MapPin, Mail, User, Users, Pencil } from 'lucide-react';
+import { useUserStore, useAuthStore, useTeamStore, useHackathonStore } from '@/lib/store';
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('teams');
   
-  // Find the user based on the URL param
-  // If no ID provided, use the first user (as if it's the current user)
-  const user = id ? users.find(u => u.id === id) : users[0];
+  const { getUserById } = useUserStore();
+  const { currentUser, isAuthenticated, logout } = useAuthStore();
+  const { teams } = useTeamStore();
+  const { getHackathonById } = useHackathonStore();
+  
+  // Find the user based on the URL param or use the current user
+  const isOwnProfile = !id; 
+  const profileUserId = id || (currentUser ? currentUser.id : '');
+  const user = getUserById(profileUserId);
+  
+  // Redirect to login if viewing own profile and not authenticated
+  useEffect(() => {
+    if (isOwnProfile && !isAuthenticated) {
+      navigate('/auth/login');
+    }
+  }, [isOwnProfile, isAuthenticated, navigate]);
   
   // If user not found
   if (!user) {
     return (
       <div className="min-h-screen pt-20 px-4">
         <div className="container mx-auto py-16 text-center">
-          <h1 className="text-2xl font-bold mb-4">User not found</h1>
-          <p className="text-muted-foreground mb-6">The user you're looking for doesn't exist or has been removed.</p>
+          <h1 className="text-2xl font-bold mb-4">Пользователь не найден</h1>
+          <p className="text-muted-foreground mb-6">Пользователь, которого вы ищете, не существует или был удален.</p>
           <Link to="/">
-            <Button>Back to Home</Button>
+            <Button>Вернуться на главную</Button>
           </Link>
         </div>
       </div>
     );
   }
+  
+  // Filter teams for this user
+  const userTeams = teams.filter(team => team.members.some(member => member.id === user.id));
   
   // Get initials from name
   const getInitials = (name: string) => {
@@ -98,7 +64,7 @@ const Profile = () => {
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+    return date.toLocaleDateString('ru-RU', { 
       year: 'numeric',
       month: 'long'
     });
@@ -106,8 +72,14 @@ const Profile = () => {
   
   // Get hackathon name by ID
   const getHackathonName = (id: string) => {
-    const hackathon = hackathons.find(h => h.id === id);
-    return hackathon ? hackathon.name : 'Unknown Hackathon';
+    const hackathon = getHackathonById(id);
+    return hackathon ? hackathon.name : 'Неизвестный хакатон';
+  };
+  
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
   
   return (
@@ -128,15 +100,20 @@ const Profile = () => {
                   <div>
                     <h1 className="text-3xl font-bold">{user.name}</h1>
                     <p className="text-muted-foreground">
-                      Member since {formatDate(user.createdAt)}
+                      Участник с {formatDate(user.createdAt)}
                     </p>
                   </div>
                   
-                  {!id && (
-                    <Button variant="outline" className="sm:w-auto gap-1">
-                      <Pencil size={16} />
-                      <span>Edit Profile</span>
-                    </Button>
+                  {isOwnProfile && (
+                    <div className="flex gap-2">
+                      <Button variant="outline" className="sm:w-auto gap-1">
+                        <Pencil size={16} />
+                        <span>Редактировать профиль</span>
+                      </Button>
+                      <Button variant="destructive" className="sm:w-auto" onClick={handleLogout}>
+                        Выйти
+                      </Button>
+                    </div>
                   )}
                 </div>
                 
@@ -159,17 +136,17 @@ const Profile = () => {
               <TabsList>
                 <TabsTrigger value="teams" className="gap-1">
                   <Users size={16} />
-                  <span>Teams</span>
+                  <span>Команды</span>
                 </TabsTrigger>
                 <TabsTrigger value="about" className="gap-1">
                   <User size={16} />
-                  <span>About</span>
+                  <span>О пользователе</span>
                 </TabsTrigger>
               </TabsList>
               
               <TabsContent value="teams" className="animate-fade-in mt-6">
                 <div className="space-y-6">
-                  <h2 className="text-2xl font-semibold">Teams</h2>
+                  <h2 className="text-2xl font-semibold">Команды</h2>
                   
                   {userTeams.length > 0 ? (
                     <div className="grid grid-cols-1 gap-6">
@@ -188,15 +165,15 @@ const Profile = () => {
                     <Card className="border border-dashed">
                       <CardContent className="flex flex-col items-center justify-center py-12">
                         <div className="text-center space-y-3">
-                          <h3 className="text-lg font-medium">No teams yet</h3>
+                          <h3 className="text-lg font-medium">Нет команд</h3>
                           <p className="text-muted-foreground max-w-md mx-auto">
-                            {id ? 
-                              "This user hasn't joined any teams yet." : 
-                              "You haven't joined any teams yet. Browse hackathons and join or create a team."}
+                            {isOwnProfile ? 
+                              "Вы еще не присоединились ни к одной команде. Просмотрите хакатоны и присоединитесь или создайте команду." : 
+                              "Этот пользователь еще не присоединился ни к одной команде."}
                           </p>
-                          {!id && (
+                          {isOwnProfile && (
                             <Link to="/hackathons">
-                              <Button>Browse Hackathons</Button>
+                              <Button>Просмотреть хакатоны</Button>
                             </Link>
                           )}
                         </div>
@@ -209,12 +186,12 @@ const Profile = () => {
               <TabsContent value="about" className="animate-fade-in mt-6">
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-2xl font-semibold mb-4">About</h2>
+                    <h2 className="text-2xl font-semibold mb-4">О пользователе</h2>
                     <p className="text-muted-foreground">{user.bio}</p>
                   </div>
                   
                   <div>
-                    <h3 className="text-xl font-semibold mb-4">Skills & Expertise</h3>
+                    <h3 className="text-xl font-semibold mb-4">Навыки и экспертиза</h3>
                     <div className="flex flex-wrap gap-2">
                       {user.skills?.map((skill, index) => (
                         <Badge key={index} className="font-normal">
@@ -232,14 +209,14 @@ const Profile = () => {
           <div className="w-full lg:w-80">
             <Card>
               <CardContent className="p-5 space-y-5">
-                <h3 className="font-semibold">Contact Info</h3>
+                <h3 className="font-semibold">Контактная информация</h3>
                 
                 <div className="space-y-4">
                   {user.location && (
                     <div className="flex items-start">
                       <MapPin size={18} className="mr-3 text-muted-foreground mt-0.5" />
                       <div>
-                        <div className="font-medium text-sm">Location</div>
+                        <div className="font-medium text-sm">Местоположение</div>
                         <div className="text-sm text-muted-foreground">{user.location}</div>
                       </div>
                     </div>
@@ -301,7 +278,7 @@ const Profile = () => {
                         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                       </svg>
                       <div>
-                        <div className="font-medium text-sm">Website</div>
+                        <div className="font-medium text-sm">Веб-сайт</div>
                         <a 
                           href={user.website} 
                           target="_blank" 
@@ -315,9 +292,9 @@ const Profile = () => {
                   )}
                 </div>
                 
-                {id && (
+                {!isOwnProfile && (
                   <div className="pt-2">
-                    <Button className="w-full">Invite to Team</Button>
+                    <Button className="w-full">Пригласить в команду</Button>
                   </div>
                 )}
               </CardContent>

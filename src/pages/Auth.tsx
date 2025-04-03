@@ -7,11 +7,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { FadeIn, SlideUp, ScaleIn } from '@/components/Animations';
 import { ArrowLeft, Eye, EyeOff, Github, LogIn, UserPlus } from 'lucide-react';
+import { useAuthStore } from '@/lib/store';
+import { useToast } from '@/hooks/use-toast';
 
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+  
+  // Get auth functions from store
+  const { login, register } = useAuthStore();
   
   // Determine if we're on the login or register page
   const isLogin = location.pathname.includes('/login');
@@ -21,15 +27,67 @@ const Auth = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here we would handle authentication
-    console.log('Auth form submitted with:', { email, password, name });
+    setIsSubmitting(true);
     
-    // For demo purposes, we'll just redirect to the profile page
-    navigate('/profile');
+    try {
+      if (isLogin) {
+        // Handle login
+        const result = await login(email, password);
+        
+        if (result.success) {
+          toast({
+            title: "Успешный вход",
+            description: "Вы успешно вошли в систему"
+          });
+          navigate('/profile');
+        } else {
+          toast({
+            title: "Ошибка входа",
+            description: result.message,
+            variant: "destructive"
+          });
+        }
+      } else {
+        // Handle registration
+        if (!name || !email || !password) {
+          toast({
+            title: "Ошибка регистрации",
+            description: "Пожалуйста, заполните все поля",
+            variant: "destructive"
+          });
+          return;
+        }
+        
+        const result = await register(name, email, password);
+        
+        if (result.success) {
+          toast({
+            title: "Успешная регистрация",
+            description: "Ваш аккаунт успешно создан"
+          });
+          navigate('/profile');
+        } else {
+          toast({
+            title: "Ошибка регистрации",
+            description: result.message,
+            variant: "destructive"
+          });
+        }
+      }
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Произошла неизвестная ошибка",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (
@@ -121,7 +179,7 @@ const Auth = () => {
                   </div>
                 </div>
                 
-                <Button type="submit" className="w-full gap-2">
+                <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
                   {isLogin 
                     ? <><LogIn size={16} /> Войти</>
                     : <><UserPlus size={16} /> Создать аккаунт</>
