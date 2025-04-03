@@ -3,13 +3,13 @@ import { Team } from '@/types';
 import { users } from './users';
 
 // Extract some users to use in team members
-const alexJohnson = users.find(u => u.id === '1')!;
-const samWilson = users[1];
-const taylorKim = users[2];
-const jamieSmith = users[3];
-const caseyBrown = users[4];
-const rileyCheng = users[5];
-const jordanLee = users[6];
+const alexeiIvanov = users.find(u => u.id === '1')!;
+const semenVolkov = users[1];
+const tatyanaKozlova = users[2];
+const dmitrySokolov = users[3];
+const ekaterinaOrlova = users[4];
+const romanChernov = users[5];
+const yuliyaLebedeva = users[6];
 
 export const teams: Team[] = [
   {
@@ -19,9 +19,9 @@ export const teams: Team[] = [
     description: 'Команда специалистов по данным и инженеров машинного обучения, создающих инструменты ИИ нового поколения.',
     tags: ['Python', 'TensorFlow', 'NLP'],
     members: [
-      alexJohnson,
-      samWilson,
-      taylorKim
+      alexeiIvanov,
+      semenVolkov,
+      tatyanaKozlova
     ],
     maxMembers: 5,
     createdBy: '1',
@@ -34,8 +34,8 @@ export const teams: Team[] = [
     description: 'Увлеченные созданием технологий, которые помогают бороться с изменением климата и способствуют устойчивому развитию.',
     tags: ['ЭкоТехнологии', 'IoT', 'React'],
     members: [
-      jamieSmith,
-      caseyBrown
+      dmitrySokolov,
+      ekaterinaOrlova
     ],
     maxMembers: 4,
     createdBy: '4',
@@ -48,8 +48,8 @@ export const teams: Team[] = [
     description: 'Фокусируемся на разработке инновационных решений ИИ с практическим применением в здравоохранении и образовании.',
     tags: ['ИИ', 'Здравоохранение', 'Образование'],
     members: [
-      rileyCheng,
-      jordanLee
+      romanChernov,
+      yuliyaLebedeva
     ],
     maxMembers: 4,
     createdBy: '6',

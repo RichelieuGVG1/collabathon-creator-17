@@ -8,7 +8,7 @@ export const hackathons: Hackathon[] = [
     description: 'Присоединяйтесь к крупнейшему хакатону по искусственному интеллекту и создавайте решения, которые будут формировать будущее ИИ. Участники будут решать реальные проблемы и разрабатывать передовые приложения ИИ, которые могут потенциально трансформировать отрасли.\n\nЭтот хакатон идеально подходит для энтузиастов ИИ, инженеров машинного обучения, специалистов по данным и всех, кто заинтересован в расширении границ возможностей ИИ. Независимо от того, являетесь ли вы опытным профессионалом или только начинаете работать в этой области, это мероприятие предлагает ценные возможности для обучения, создания сети контактов и демонстрации ваших талантов.',
     startDate: '2023-09-15',
     endDate: '2023-09-18',
-    location: 'Виртуально',
+    location: 'Онлайн',
     tags: ['ИИ', 'Машинное обучение', 'Инновации'],
     imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Альянс ИИ',
@@ -21,15 +21,15 @@ export const hackathons: Hackathon[] = [
     prizes: [
       {
         place: '1-е место',
-        description: 'Денежный приз $10,000 + кредиты для вычислений ИИ',
+        description: 'Денежный приз 750 000 ₽ + кредиты для вычислений ИИ',
       },
       {
         place: '2-е место',
-        description: 'Денежный приз $5,000 + возможности менторства',
+        description: 'Денежный приз 375 000 ₽ + возможности менторства',
       },
       {
         place: '3-е место',
-        description: 'Денежный приз $2,500 + лицензии на продукты',
+        description: 'Денежный приз 190 000 ₽ + лицензии на продукты',
       }
     ],
     schedule: [
@@ -77,7 +77,7 @@ export const hackathons: Hackathon[] = [
     description: 'Разработка инновационных решений для борьбы с изменением климата и экологическими проблемами с помощью технологий.',
     startDate: '2023-10-05',
     endDate: '2023-10-07',
-    location: 'Сан-Франциско, Калифорния',
+    location: 'Москва',
     tags: ['ЭкоТехнологии', 'Устойчивое развитие', 'Экология'],
     imageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Альянс Климата',
@@ -90,15 +90,15 @@ export const hackathons: Hackathon[] = [
     prizes: [
       {
         place: '1-е место',
-        description: 'Денежный приз $15,000 + инвестиции в проект',
+        description: 'Денежный приз 1 125 000 ₽ + инвестиции в проект',
       },
       {
         place: '2-е место',
-        description: 'Денежный приз $7,500 + менторство',
+        description: 'Денежный приз 560 000 ₽ + менторство',
       },
       {
         place: '3-е место',
-        description: 'Денежный приз $3,000 + поддержка развития',
+        description: 'Денежный приз 225 000 ₽ + поддержка развития',
       }
     ],
     schedule: [
@@ -146,7 +146,7 @@ export const hackathons: Hackathon[] = [
     description: 'Расширяйте границы блокчейн-технологий, создавая инновационные dApps и решения Web3.',
     startDate: '2023-11-12',
     endDate: '2023-11-14',
-    location: 'Виртуально',
+    location: 'Онлайн',
     tags: ['Блокчейн', 'Web3', 'Крипто'],
     imageUrl: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Блокчейн Фонд',
@@ -159,15 +159,15 @@ export const hackathons: Hackathon[] = [
     prizes: [
       {
         place: '1-е место',
-        description: 'Призовой фонд в криптовалюте эквивалентный $20,000',
+        description: 'Призовой фонд в криптовалюте эквивалентный 1 500 000 ₽',
       },
       {
         place: '2-е место',
-        description: 'Призовой фонд в криптовалюте эквивалентный $10,000',
+        description: 'Призовой фонд в криптовалюте эквивалентный 750 000 ₽',
       },
       {
         place: '3-е место',
-        description: 'Призовой фонд в криптовалюте эквивалентный $5,000',
+        description: 'Призовой фонд в криптовалюте эквивалентный 375 000 ₽',
       }
     ],
     schedule: [
@@ -215,7 +215,7 @@ export const hackathons: Hackathon[] = [
     description: 'Создавайте решения, использующие технологии для улучшения предоставления медицинской помощи, результатов лечения пациентов и медицинских исследований.',
     startDate: '2023-09-25',
     endDate: '2023-09-27',
-    location: 'Бостон, Массачусетс',
+    location: 'Санкт-Петербург',
     tags: ['Здравоохранение', 'ИИ', 'IoT'],
     imageUrl: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Инициатива МедТех',
@@ -228,15 +228,15 @@ export const hackathons: Hackathon[] = [
     prizes: [
       {
         place: '1-е место',
-        description: 'Грант на разработку $25,000 и доступ к медицинским данным',
+        description: 'Грант на разработку 1 875 000 ₽ и доступ к медицинским данным',
       },
       {
         place: '2-е место',
-        description: 'Грант на разработку $12,000 и менторство от экспертов',
+        description: 'Грант на разработку 900 000 ₽ и менторство от экспертов',
       },
       {
         place: '3-е место',
-        description: 'Грант на разработку $5,000 и доступ к API партнеров',
+        description: 'Грант на разработку 375 000 ₽ и доступ к API партнеров',
       }
     ],
     schedule: [
@@ -284,7 +284,7 @@ export const hackathons: Hackathon[] = [
     description: 'Переосмыслите будущее образования через инновационные технологические решения, которые улучшают процесс обучения.',
     startDate: '2023-10-15',
     endDate: '2023-10-17',
-    location: 'Чикаго, Иллинойс',
+    location: 'Казань',
     tags: ['ОбрТех', 'ИИ', 'UX Дизайн'],
     imageUrl: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2332&q=80',
     organizerName: 'Альянс ОбрТех',
@@ -297,15 +297,15 @@ export const hackathons: Hackathon[] = [
     prizes: [
       {
         place: '1-е место',
-        description: 'Денежный приз $8,000 и пилотный запуск в образовательных учреждениях',
+        description: 'Денежный приз 600 000 ₽ и пилотный запуск в образовательных учреждениях',
       },
       {
         place: '2-е место',
-        description: 'Денежный приз $4,000 и доступ к образовательной платформе',
+        description: 'Денежный приз 300 000 ₽ и доступ к образовательной платформе',
       },
       {
         place: '3-е место',
-        description: 'Денежный приз $2,000 и годовая подписка на образовательные сервисы',
+        description: 'Денежный приз 150 000 ₽ и годовая подписка на образовательные сервисы',
       }
     ],
     schedule: [
@@ -353,7 +353,7 @@ export const hackathons: Hackathon[] = [
     description: 'Создавайте инновационные финансово-технологические решения, которые могут трансформировать банковское дело, платежи, инвестиции и многое другое.',
     startDate: '2023-11-05',
     endDate: '2023-11-07',
-    location: 'Нью-Йорк, штат Нью-Йорк',
+    location: 'Москва',
     tags: ['Финтех', 'Блокчейн', 'Безопасность'],
     imageUrl: 'https://images.unsplash.com/photo-1642543348745-755807f00628?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80',
     organizerName: 'Лаборатория финансовых инноваций',
@@ -366,15 +366,15 @@ export const hackathons: Hackathon[] = [
     prizes: [
       {
         place: '1-е место',
-        description: 'Инвестиции $50,000 и доступ к акселератору',
+        description: 'Инвестиции 3 750 000 ₽ и доступ к акселератору',
       },
       {
         place: '2-е место',
-        description: 'Инвестиции $25,000 и программа поддержки',
+        description: 'Инвестиции 1 875 000 ₽ и программа поддержки',
       },
       {
         place: '3-е место',
-        description: 'Грант $10,000 и доступ к API финансовых сервисов',
+        description: 'Грант 750 000 ₽ и доступ к API финансовых сервисов',
       }
     ],
     schedule: [
