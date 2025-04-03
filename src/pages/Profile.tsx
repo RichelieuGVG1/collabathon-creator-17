@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FadeIn, StaggerContainer } from '@/components/Animations';
 import TeamCard from '@/components/TeamCard';
+import TeamInvitations from '@/components/TeamInvitations';
 import { Calendar, MapPin, Mail, User, Users, Pencil } from 'lucide-react';
 import { useUserStore, useAuthStore, useTeamStore, useHackathonStore } from '@/lib/store';
 
@@ -21,19 +21,17 @@ const Profile = () => {
   const { teams } = useTeamStore();
   const { getHackathonById } = useHackathonStore();
   
-  // Find the user based on the URL param or use the current user
-  const isOwnProfile = !id; 
+  const isCurrentUser = currentUser && currentUser.id === id;
+  
   const profileUserId = id || (currentUser ? currentUser.id : '');
   const user = getUserById(profileUserId);
   
-  // Redirect to login if viewing own profile and not authenticated
   useEffect(() => {
     if (isOwnProfile && !isAuthenticated) {
       navigate('/auth/login');
     }
   }, [isOwnProfile, isAuthenticated, navigate]);
   
-  // If user not found
   if (!user) {
     return (
       <div className="min-h-screen pt-20 px-4">
@@ -48,10 +46,8 @@ const Profile = () => {
     );
   }
   
-  // Filter teams for this user
   const userTeams = teams.filter(team => team.members.some(member => member.id === user.id));
   
-  // Get initials from name
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -61,7 +57,6 @@ const Profile = () => {
       .substring(0, 2);
   };
   
-  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ru-RU', { 
@@ -70,13 +65,11 @@ const Profile = () => {
     });
   };
   
-  // Get hackathon name by ID
   const getHackathonName = (id: string) => {
     const hackathon = getHackathonById(id);
     return hackathon ? hackathon.name : 'Неизвестный хакатон';
   };
   
-  // Handle logout
   const handleLogout = () => {
     logout();
     navigate('/');
@@ -129,8 +122,14 @@ const Profile = () => {
           </div>
         </FadeIn>
         
+        {isCurrentUser && user.invitations && user.invitations.filter(inv => inv.status === 'pending').length > 0 && (
+          <TeamInvitations 
+            userId={user.id} 
+            invitations={user.invitations.filter(inv => inv.status === 'pending')} 
+          />
+        )}
+        
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Main Content */}
           <div className="flex-1">
             <Tabs defaultValue="teams" value={activeTab} onValueChange={setActiveTab}>
               <TabsList>
@@ -205,7 +204,6 @@ const Profile = () => {
             </Tabs>
           </div>
           
-          {/* Sidebar */}
           <div className="w-full lg:w-80">
             <Card>
               <CardContent className="p-5 space-y-5">

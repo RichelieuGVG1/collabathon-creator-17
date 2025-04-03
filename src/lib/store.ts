@@ -1,6 +1,5 @@
-
 import { create } from 'zustand';
-import { Hackathon, Team, User } from '@/types';
+import { Hackathon, Team, User, TeamInvitation } from '@/types';
 import { hackathons as initialHackathons } from '@/data/hackathons';
 import { teams as initialTeams } from '@/data/teams';
 import { users as initialUsers } from '@/data/users';
@@ -27,11 +26,15 @@ interface TeamState {
   createTeam: (team: Omit<Team, 'id' | 'createdAt'>) => Team;
   joinTeam: (teamId: string, userId: string) => boolean;
   leaveTeam: (teamId: string, userId: string) => boolean;
+  inviteUserToTeam: (teamId: string, userId: string) => boolean;
+  getUserInvitations: (userId: string) => TeamInvitation[];
+  respondToInvitation: (userId: string, teamId: string, accept: boolean) => boolean;
 }
 
 interface UserState {
   users: User[];
   getUserById: (id: string) => User | undefined;
+  getUsersWithoutTeam: () => User[];
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -40,11 +43,9 @@ export const useAuthStore = create<AuthState>()(
       currentUser: null,
       isAuthenticated: false,
       login: async (email, password) => {
-        // Simple mock login, would connect to a backend in a real app
         const user = initialUsers.find(u => u.email === email);
         
         if (user) {
-          // In a real app, you would verify the password with a hash
           set({ currentUser: user, isAuthenticated: true });
           return { success: true, message: 'Login successful' };
         }
@@ -110,6 +111,12 @@ export const useHackathonStore = create<HackathonState>()((set, get) => ({
     });
   }
 }));
+
+initialUsers.forEach(user => {
+  if (!user.invitations) {
+    user.invitations = [];
+  }
+});
 
 export const useTeamStore = create<TeamState>()((set, get) => ({
   teams: initialTeams,
@@ -182,11 +189,100 @@ export const useTeamStore = create<TeamState>()((set, get) => ({
     set({ teams: updatedTeams });
     return true;
   },
+  inviteUserToTeam: (teamId, userId) => {
+    const users = useUserStore.getState().users;
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) return false;
+    
+    const user = users[userIndex];
+    
+    // Check if team exists
+    const team = get().getTeamById(teamId);
+    if (!team) return false;
+    
+    // Check if user is already invited
+    if (user.invitations?.some(inv => inv.teamId === teamId && inv.status === 'pending')) {
+      return false;
+    }
+    
+    // Create invitation
+    const invitation: TeamInvitation = {
+      id: `invitation-${Date.now()}`,
+      teamId,
+      userId,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    };
+    
+    // Add invitation to user
+    const updatedUser = {
+      ...user,
+      invitations: [...(user.invitations || []), invitation]
+    };
+    
+    const updatedUsers = [...users];
+    updatedUsers[userIndex] = updatedUser;
+    
+    useUserStore.setState({ users: updatedUsers });
+    return true;
+  },
+  getUserInvitations: (userId) => {
+    const user = useUserStore.getState().getUserById(userId);
+    return user?.invitations?.filter(inv => inv.status === 'pending') || [];
+  },
+  respondToInvitation: (userId, teamId, accept) => {
+    const users = useUserStore.getState().users;
+    const userIndex = users.findIndex(u => u.id === userId);
+    
+    if (userIndex === -1) return false;
+    
+    const user = users[userIndex];
+    
+    // Find invitation
+    const invitationIndex = user.invitations?.findIndex(
+      inv => inv.teamId === teamId && inv.status === 'pending'
+    ) ?? -1;
+    
+    if (invitationIndex === -1) return false;
+    
+    // Update invitation status
+    const updatedInvitations = [...(user.invitations || [])];
+    updatedInvitations[invitationIndex] = {
+      ...updatedInvitations[invitationIndex],
+      status: accept ? 'accepted' : 'declined'
+    };
+    
+    const updatedUser = {
+      ...user,
+      invitations: updatedInvitations
+    };
+    
+    const updatedUsers = [...users];
+    updatedUsers[userIndex] = updatedUser;
+    
+    useUserStore.setState({ users: updatedUsers });
+    
+    // If accepted, add user to team
+    if (accept) {
+      return get().joinTeam(teamId, userId);
+    }
+    
+    return true;
+  }
 }));
 
 export const useUserStore = create<UserState>()((set, get) => ({
   users: initialUsers,
   getUserById: (id) => {
     return get().users.find(u => u.id === id);
+  },
+  getUsersWithoutTeam: () => {
+    const teams = useTeamStore.getState().teams;
+    const allTeamMemberIds = new Set(
+      teams.flatMap(team => team.members.map(member => member.id))
+    );
+    
+    return get().users.filter(user => !allTeamMemberIds.has(user.id));
   }
 }));

@@ -43,6 +43,7 @@ export interface User {
   github?: string;
   website?: string;
   skills?: string[];
+  invitations?: TeamInvitation[];
 }
 
 export interface Team {
@@ -54,6 +55,14 @@ export interface Team {
   members: User[];
   maxMembers: number;
   createdBy: string;
+  createdAt: string;
+}
+
+export interface TeamInvitation {
+  id: string;
+  teamId: string;
+  userId: string;
+  status: 'pending' | 'accepted' | 'declined';
   createdAt: string;
 }
 
