@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -5,14 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { FadeIn, StaggerContainer } from '@/components/Animations';
-import { useTeamStore, useHackathonStore, useAuthStore } from '@/lib/store';
+import { useTeamStore, useHackathonStore } from '@/lib/store';
 import TeamCard from '@/components/TeamCard';
-import { Search, Filter, Plus, X, Users } from 'lucide-react';
+import { Search, Filter, Plus, X } from 'lucide-react';
 
 const Teams = () => {
   const { teams } = useTeamStore();
   const { hackathons, getHackathonById } = useHackathonStore();
-  const { currentUser } = useAuthStore();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -25,8 +25,8 @@ const Teams = () => {
   };
   
   // Get all available tags from teams
-  const allTags: string[] = Array.from(
-    new Set(teams.flatMap(team => team.tags as string[]))
+  const allTags = Array.from(
+    new Set(teams.flatMap(team => team.tags))
   ).sort();
   
   // Filter teams based on search query and filters
@@ -75,20 +75,12 @@ const Teams = () => {
               </p>
             </div>
             
-            <div className="flex gap-2">
-              <Link to="/users-without-team">
-                <Button variant="outline" className="sm:w-auto gap-1">
-                  <Users size={16} />
-                  <span>Найти участников</span>
-                </Button>
-              </Link>
-              <Link to="/teams/create">
-                <Button className="sm:w-auto gap-1">
-                  <Plus size={16} />
-                  <span>Создать команду</span>
-                </Button>
-              </Link>
-            </div>
+            <Link to="/teams/create">
+              <Button className="sm:w-auto gap-1">
+                <Plus size={16} />
+                <span>Создать команду</span>
+              </Button>
+            </Link>
           </div>
         </FadeIn>
         
@@ -134,9 +126,9 @@ const Teams = () => {
               </div>
               
               <div className="flex flex-wrap gap-2">
-                {allTags.map((tag, index) => (
+                {allTags.map(tag => (
                   <Badge
-                    key={index}
+                    key={tag}
                     variant={activeFilters.includes(tag) ? "default" : "outline"}
                     className="cursor-pointer"
                     onClick={() => toggleFilter(tag)}
@@ -155,9 +147,9 @@ const Teams = () => {
           {activeFilters.length > 0 && (
             <div className="flex flex-wrap items-center gap-2 mb-6 animate-fade-in">
               <span className="text-sm text-muted-foreground">Активные фильтры:</span>
-              {activeFilters.map((filter, index) => (
+              {activeFilters.map(filter => (
                 <Badge
-                  key={index}
+                  key={filter}
                   variant="secondary"
                   className="flex items-center gap-1 pl-2 pr-1"
                 >

@@ -6,30 +6,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useTeamStore, useAuthStore } from '@/lib/store';
-import { useToast } from '@/hooks/use-toast';
-import { LucideIcon } from 'lucide-react';
 
 interface UserCardProps {
   user: User;
   index?: number;
   showAddButton?: boolean;
   onAddClick?: () => void;
-  teamId?: string;
-  action?: {
-    label: string;
-    icon?: LucideIcon | null;
-    onClick: () => void;
-    disabled?: boolean;
-  };
 }
 
-const UserCard = ({ user, index = 0, showAddButton = false, onAddClick, teamId, action }: UserCardProps) => {
+const UserCard = ({ user, index = 0, showAddButton = false, onAddClick }: UserCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isInviting, setIsInviting] = useState(false);
-  const { inviteUserToTeam } = useTeamStore();
-  const { currentUser } = useAuthStore();
-  const { toast } = useToast();
   
   // Get initials from name
   const getInitials = (name: string) => {
@@ -48,41 +34,6 @@ const UserCard = ({ user, index = 0, showAddButton = false, onAddClick, teamId, 
       year: 'numeric', 
       month: 'short' 
     });
-  };
-  
-  // Check if current user is invited to or member of a team
-  const isAlreadyInvited = user.invitations?.some(
-    inv => inv.teamId === teamId && inv.status === 'pending'
-  );
-  
-  // Handle invite click
-  const handleInviteClick = () => {
-    if (!teamId || !currentUser) return;
-    
-    setIsInviting(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      const success = inviteUserToTeam(teamId, user.id);
-      
-      if (success) {
-        toast({
-          title: "Приглашение отправлено",
-          description: `${user.name} получил приглашение присоединиться к вашей команде.`,
-        });
-      } else {
-        toast({
-          title: "Ошибка",
-          description: "Невозможно отправить приглашение. Пожалуйста, попробуйте позже.",
-          variant: "destructive",
-        });
-      }
-      
-      setIsInviting(false);
-      
-      // Call parent callback if provided
-      if (onAddClick) onAddClick();
-    }, 500);
   };
 
   return (
@@ -131,36 +82,7 @@ const UserCard = ({ user, index = 0, showAddButton = false, onAddClick, teamId, 
               )}
             </div>
             
-            {action && (
-              <Button 
-                size="sm" 
-                variant={action.disabled ? "secondary" : "outline"}
-                className="mt-2"
-                onClick={action.onClick}
-                disabled={action.disabled}
-              >
-                {action.icon && <action.icon className="mr-2 h-4 w-4" />}
-                {action.label}
-              </Button>
-            )}
-            
-            {showAddButton && teamId && !action && (
-              <Button 
-                size="sm" 
-                variant={isAlreadyInvited ? "secondary" : "outline"}
-                className="mt-2"
-                onClick={handleInviteClick}
-                disabled={isInviting || isAlreadyInvited}
-              >
-                {isAlreadyInvited 
-                  ? "Приглашение отправлено" 
-                  : isInviting 
-                    ? "Отправка приглашения..." 
-                    : "Пригласить в команду"}
-              </Button>
-            )}
-            
-            {onAddClick && !teamId && !action && (
+            {showAddButton && (
               <Button 
                 size="sm" 
                 variant="outline" 

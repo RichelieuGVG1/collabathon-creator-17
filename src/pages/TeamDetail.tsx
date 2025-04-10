@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -7,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FadeIn, SlideUp, StaggerContainer } from '@/components/Animations';
 import UserCard from '@/components/UserCard';
-import { ArrowLeft, Users, Calendar, Copy, ChevronLeft, UserPlus } from 'lucide-react';
+import { ArrowLeft, Users, Calendar, Copy, ChevronLeft } from 'lucide-react';
 import { useTeamStore, useHackathonStore, useAuthStore } from '@/lib/store';
 import { useToast } from '@/hooks/use-toast';
 
@@ -21,10 +22,10 @@ const TeamDetail = () => {
   const { getHackathonById } = useHackathonStore();
   const { isAuthenticated, currentUser } = useAuthStore();
   
-  const teamId = id;
-  
+  // Find the team based on the URL param
   const team = id ? getTeamById(id) : undefined;
   
+  // If team not found
   if (!team) {
     return (
       <div className="min-h-screen pt-20 px-4">
@@ -39,8 +40,10 @@ const TeamDetail = () => {
     );
   }
   
+  // Get hackathon details
   const hackathon = getHackathonById(team.hackathonId);
   
+  // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('ru-RU', { 
@@ -50,6 +53,7 @@ const TeamDetail = () => {
     });
   };
   
+  // Get initials from name
   const getInitials = (name: string) => {
     return name
       .split(' ')
@@ -59,18 +63,20 @@ const TeamDetail = () => {
       .substring(0, 2);
   };
   
+  // Check if user is a member of the team
   const isMember = isAuthenticated && currentUser 
     ? team.members.some(member => member.id === currentUser.id)
     : false;
   
+  // Check if user is the team creator
   const isCreator = isAuthenticated && currentUser 
     ? team.createdBy === currentUser.id
     : false;
   
+  // Check if team is full
   const isTeamFull = team.members.length >= team.maxMembers;
   
-  const canManageTeam = isAuthenticated && (isCreator || isMember);
-  
+  // Handle join team
   const handleJoinTeam = () => {
     if (!isAuthenticated || !currentUser) {
       toast({
@@ -107,9 +113,11 @@ const TeamDetail = () => {
     }
   };
   
+  // Handle leave team
   const handleLeaveTeam = () => {
     if (!isAuthenticated || !currentUser) return;
     
+    // Creator can't leave their team
     if (isCreator) {
       toast({
         title: "Действие недоступно",
@@ -138,11 +146,13 @@ const TeamDetail = () => {
   return (
     <div className="min-h-screen pt-20 pb-16">
       <div className="container mx-auto px-4">
+        {/* Back Link */}
         <Link to="/teams" className="inline-flex items-center text-muted-foreground hover:text-foreground transition-colors mb-6">
           <ChevronLeft size={16} className="mr-1" />
           <span>Вернуться к списку команд</span>
         </Link>
         
+        {/* Team Header */}
         <FadeIn delay={100}>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
@@ -193,20 +203,13 @@ const TeamDetail = () => {
                   Редактировать команду
                 </Button>
               )}
-              
-              {canManageTeam && team.members.length < team.maxMembers && (
-                <Link to={`/teams/${teamId}/invite`}>
-                  <Button variant="outline" className="gap-1">
-                    <UserPlus size={16} />
-                    <span>Пригласить участников</span>
-                  </Button>
-                </Link>
-              )}
             </div>
           </div>
         </FadeIn>
         
+        {/* Team Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="about" value={activeTab} onValueChange={setActiveTab}>
               <TabsList>
@@ -264,6 +267,7 @@ const TeamDetail = () => {
             </Tabs>
           </div>
           
+          {/* Sidebar */}
           <div>
             <Card>
               <CardContent className="p-6 space-y-6">
