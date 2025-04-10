@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Hackathon } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Users } from 'lucide-react';
+import { Calendar, Code, Users, MapPin } from 'lucide-react'; // Updated icons
 
 interface HackathonCardProps {
   hackathon: Hackathon;
@@ -85,6 +85,11 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
                 <Users size={12} className="mr-1" />
                 <span>{hackathon.teamSize.min}-{hackathon.teamSize.max} участников</span>
               </div>
+              
+              <div className="flex items-center">
+                <Code size={12} className="mr-1" /> {/* New icon representing coding/tech theme */}
+                <span>Хакатон</span>
+              </div>
             </div>
             
             <p className="text-sm text-muted-foreground line-clamp-2">
@@ -111,3 +116,4 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
 };
 
 export default HackathonCard;
+
