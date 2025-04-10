@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -29,29 +28,23 @@ const UsersWithoutTeam = () => {
   
   const team = isInviteMode && teamId ? getTeamById(teamId) : null;
   
-  // If in invite mode but team not found, redirect back
   useEffect(() => {
     if (isInviteMode && !team) {
       navigate('/teams');
     }
   }, [isInviteMode, team, navigate]);
   
-  // Filter users who don't have a team
   const usersWithoutTeam = users.filter(user => {
-    // Exclude current user
     if (currentUser && user.id === currentUser.id) return false;
     
-    // Check if user is not in any team
     const userHasTeam = teams.some(team => 
       team.members.some(member => member.id === user.id)
     );
     
-    // If in invite mode, exclude users who are already in this team
     if (isInviteMode && team) {
       const alreadyInTeam = team.members.some(member => member.id === user.id);
       if (alreadyInTeam) return false;
       
-      // Check if user already has a pending invitation to this team
       const hasPendingInvitation = user.invitations?.some(
         inv => inv.teamId === team.id && inv.status === 'pending'
       );
@@ -61,21 +54,17 @@ const UsersWithoutTeam = () => {
     return !userHasTeam;
   });
   
-  // Get all available tags from users with explicit typing
   const allTags: string[] = Array.from(
     new Set(usersWithoutTeam.flatMap(user => user.tags as string[]))
   ).sort();
   
-  // Filter users based on search query and filters
   const filteredUsers = usersWithoutTeam.filter(user => {
-    // Search filter
     const matchesSearch = 
       searchQuery === '' ||
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.bio.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     
-    // Tag filters
     const matchesFilters = 
       activeFilters.length === 0 ||
       user.tags.some(tag => activeFilters.includes(tag));
@@ -83,7 +72,6 @@ const UsersWithoutTeam = () => {
     return matchesSearch && matchesFilters;
   });
   
-  // Toggle filter
   const toggleFilter = (tag: string) => {
     if (activeFilters.includes(tag)) {
       setActiveFilters(activeFilters.filter(t => t !== tag));
@@ -92,21 +80,17 @@ const UsersWithoutTeam = () => {
     }
   };
   
-  // Clear all filters
   const clearFilters = () => {
     setActiveFilters([]);
     setSearchQuery('');
   };
   
-  // Handle sending invitations
   const handleInvite = (userId: string) => {
     if (!isInviteMode || !team || !teamId) return;
     
-    // Send invitation
     const success = inviteUserToTeam(teamId, userId);
     
     if (success) {
-      // Mark as invited for UI feedback
       setInvitingSent(prev => ({ ...prev, [userId]: true }));
       
       toast({
@@ -123,11 +107,10 @@ const UsersWithoutTeam = () => {
   };
   
   return (
-    <div className="min-h-screen pt-20">
-      <div className="container mx-auto px-4 py-16">
-        {/* Header */}
+    <div className="min-h-screen pt-20 flex justify-center">
+      <div className="container mx-auto px-4 py-16 max-w-6xl">
         <FadeIn delay={100}>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-center gap-4 mb-6 text-center">
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Button 
@@ -151,9 +134,8 @@ const UsersWithoutTeam = () => {
           </div>
         </FadeIn>
         
-        {/* Search and Filter */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="mb-8 flex flex-col items-center">
+          <div className="flex flex-col sm:flex-row gap-4 mb-6 w-full max-w-2xl">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input
@@ -180,9 +162,8 @@ const UsersWithoutTeam = () => {
             </Button>
           </div>
           
-          {/* Filters */}
           {showFilters && (
-            <div className="bg-secondary/50 rounded-lg p-4 mb-6 animate-fade-in">
+            <div className="bg-secondary/50 rounded-lg p-4 mb-6 animate-fade-in w-full max-w-2xl">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-medium">Фильтр по навыкам</h3>
                 {activeFilters.length > 0 && (
@@ -210,9 +191,8 @@ const UsersWithoutTeam = () => {
             </div>
           )}
           
-          {/* Active Filters Display */}
           {activeFilters.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mb-6 animate-fade-in">
+            <div className="flex flex-wrap items-center justify-center gap-2 mb-6 animate-fade-in">
               <span className="text-sm text-muted-foreground">Активные фильтры:</span>
               {activeFilters.map((filter, index) => (
                 <Badge
@@ -243,44 +223,47 @@ const UsersWithoutTeam = () => {
           )}
         </div>
         
-        {/* Users Listing */}
-        {filteredUsers.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <StaggerContainer initialDelay={200} staggerDelay={100}>
-              {filteredUsers.map((user, index) => (
-                <UserCard 
-                  key={user.id} 
-                  user={user} 
-                  index={index}
-                  action={
-                    isInviteMode ? {
-                      label: invitingSent[user.id] ? "Приглашение отправлено" : "Пригласить в команду",
-                      icon: invitingSent[user.id] ? Check : null,
-                      onClick: () => handleInvite(user.id),
-                      disabled: invitingSent[user.id]
-                    } : undefined
-                  }
-                />
-              ))}
-            </StaggerContainer>
-          </div>
-        ) : (
-          <Card className="border border-dashed">
-            <CardContent className="flex flex-col items-center justify-center p-12">
-              <div className="text-center space-y-3">
-                <h3 className="text-lg font-medium">Участники не найдены</h3>
-                <p className="text-muted-foreground">
-                  Попробуйте изменить параметры поиска или фильтры, чтобы найти то, что вы ищете.
-                </p>
-                {activeFilters.length > 0 || searchQuery ? (
-                  <Button variant="outline" onClick={clearFilters}>
-                    Очистить все фильтры
-                  </Button>
-                ) : null}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <div className="flex justify-center">
+          {filteredUsers.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full">
+              <StaggerContainer initialDelay={200} staggerDelay={100}>
+                {filteredUsers.map((user, index) => (
+                  <UserCard 
+                    key={user.id} 
+                    user={user} 
+                    index={index}
+                    action={
+                      isInviteMode ? {
+                        label: invitingSent[user.id] ? "Приглашение отправлено" : "Пригласить в команду",
+                        icon: invitingSent[user.id] ? Check : null,
+                        onClick: () => handleInvite(user.id),
+                        disabled: invitingSent[user.id]
+                      } : undefined
+                    }
+                  />
+                ))}
+              </StaggerContainer>
+            </div>
+          ) : (
+            <div className="w-full max-w-md">
+              <Card className="border border-dashed">
+                <CardContent className="flex flex-col items-center justify-center p-12">
+                  <div className="text-center space-y-3">
+                    <h3 className="text-lg font-medium">Участники не найдены</h3>
+                    <p className="text-muted-foreground">
+                      Попробуйте изменить параметры поиска или фильтры, чтобы найти то, что вы ищете.
+                    </p>
+                    {activeFilters.length > 0 || searchQuery ? (
+                      <Button variant="outline" onClick={clearFilters}>
+                        Очистить все фильтры
+                      </Button>
+                    ) : null}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
