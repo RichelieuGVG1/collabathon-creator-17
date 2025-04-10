@@ -87,7 +87,7 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
               </div>
               
               <div className="flex items-center">
-                <Code size={12} className="mr-1" /> {/* New icon representing coding/tech theme */}
+                <Code size={12} className="mr-1" />
                 <span>Хакатон</span>
               </div>
             </div>
@@ -116,4 +116,3 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
 };
 
 export default HackathonCard;
-
