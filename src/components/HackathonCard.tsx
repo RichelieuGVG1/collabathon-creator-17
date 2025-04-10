@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Hackathon } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, Code, Users, MapPin } from 'lucide-react'; // Updated icons
+import { Calendar, Code, Users, MapPin } from 'lucide-react';
 
 interface HackathonCardProps {
   hackathon: Hackathon;
