@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Hackathon } from '@/types';
@@ -45,7 +44,7 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
       }`}>
         <div className="relative aspect-[16/9] overflow-hidden">
           <img 
-            src={hackathon.imageUrl || 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80'} 
+            src={hackathon.imageUrl || 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b'} 
             alt={hackathon.name}
             className={`w-full h-full object-cover transition-transform duration-450 ${
               isHovered ? 'scale-105' : 'scale-100'
@@ -56,7 +55,7 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
           {/* Organization logo */}
           <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm p-1 rounded-md">
             <img 
-              src={hackathon.organizerLogo || 'https://via.placeholder.com/40'}
+              src={hackathon.organizerLogo || 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6'}
               alt={hackathon.organizerName}
               className="w-7 h-7 object-contain"
             />
