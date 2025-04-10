@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -26,8 +25,8 @@ const Teams = () => {
   };
   
   // Get all available tags from teams
-  const allTags = Array.from(
-    new Set(teams.flatMap(team => team.tags))
+  const allTags: string[] = Array.from(
+    new Set(teams.flatMap(team => team.tags as string[]))
   ).sort();
   
   // Filter teams based on search query and filters
