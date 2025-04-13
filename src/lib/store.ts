@@ -84,7 +84,7 @@ export const useAuthStore = create<AuthState>()(
         set({ currentUser: null, isAuthenticated: false, isAdmin: false });
       },
       adminLogin: async (password) => {
-        if (password === 'admin123') {
+        if (password === 'admin') {
           set({ isAdmin: true, isAuthenticated: true });
           return { success: true, message: 'Вход администратора успешен' };
         }
