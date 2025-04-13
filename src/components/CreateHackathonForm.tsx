@@ -126,7 +126,7 @@ const CreateHackathonForm = ({ onClose }: { onClose: () => void }) => {
       <CardContent>
         <ScrollArea className="h-[600px] w-full pr-4">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6" style={{ margin: '0px 5px' }}>
               <FormField
                 control={form.control}
                 name="name"
