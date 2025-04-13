@@ -74,9 +74,18 @@ const CreateHackathonForm = ({ onClose }: { onClose: () => void }) => {
 
   const onSubmit = (data: HackathonFormValues) => {
     // Create the hackathon with all the form data
+    // Make sure to include all required fields for the Hackathon type
     createHackathon({
-      ...data,
-      tags,
+      name: data.name,
+      description: data.description,
+      startDate: format(data.startDate, 'yyyy-MM-dd'),
+      endDate: format(data.endDate, 'yyyy-MM-dd'),
+      location: data.location,
+      tags: tags,
+      imageUrl: data.imageUrl,
+      organizerName: data.organizerName,
+      organizerLogo: data.organizerLogo,
+      website: data.website,
       teamSize: {
         min: minTeamSize,
         max: maxTeamSize
