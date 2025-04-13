@@ -20,7 +20,7 @@ const featuredHackathons = [
     tags: ['ИИ', 'Машинное обучение', 'Инновации'],
     imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Альянс ИИ',
-    organizerLogo: 'https://via.placeholder.com/40',
+    organizerLogo: 'https://cdn-icons-png.flaticon.com/512/4372/4372820.png',
     teamSize: {
       min: 2,
       max: 5
@@ -36,7 +36,7 @@ const featuredHackathons = [
     tags: ['ЭкоТехнологии', 'Устойчивое развитие', 'Экология'],
     imageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Альянс Климата',
-    organizerLogo: 'https://via.placeholder.com/40',
+    organizerLogo: 'https://cdn-icons-png.flaticon.com/512/4372/4372820.png',
     teamSize: {
       min: 3,
       max: 6
@@ -52,7 +52,7 @@ const featuredHackathons = [
     tags: ['Блокчейн', 'Web3', 'Крипто'],
     imageUrl: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Блокчейн Фонд',
-    organizerLogo: 'https://via.placeholder.com/40',
+    organizerLogo: 'https://cdn-icons-png.flaticon.com/512/4372/4372820.png',
     teamSize: {
       min: 2,
       max: 4
