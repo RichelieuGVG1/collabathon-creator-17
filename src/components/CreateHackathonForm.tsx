@@ -379,16 +379,12 @@ const CreateHackathonForm = ({ onClose }: { onClose: () => void }) => {
 
               <div className="flex justify-between pt-4">
                 <Button type="button" variant="ghost" onClick={onClose}>Отмена</Button>
-                <Button type="submit" form="hackathon-form">Создать хакатон</Button>
+                <Button type="submit">Создать хакатон</Button>
               </div>
             </form>
           </Form>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button type="button" variant="ghost" onClick={onClose}>Отмена</Button>
-        <Button type="submit" form="hackathon-form">Создать хакатон</Button>
-      </CardFooter>
     </Card>
   );
 };
