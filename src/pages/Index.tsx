@@ -170,7 +170,7 @@ const Index = () => {
                 </p>
               </div>
               
-              <div className="bg-secondary/50 p-6 rounded-lg">
+              <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
                 <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
                   <Users size={24} className="text-primary" />
                 </div>
@@ -180,7 +180,7 @@ const Index = () => {
                 </p>
               </div>
               
-              <div className="bg-secondary/50 p-6 rounded-lg">
+              <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
                 <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
                   <Award size={24} className="text-primary" />
                 </div>
