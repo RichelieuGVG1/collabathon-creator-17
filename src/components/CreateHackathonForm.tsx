@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -23,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const hackathonSchema = z.object({
   name: z.string().min(3, 'Название должно содержать минимум 3 символа'),
@@ -73,8 +73,6 @@ const CreateHackathonForm = ({ onClose }: { onClose: () => void }) => {
   };
 
   const onSubmit = (data: HackathonFormValues) => {
-    // Create the hackathon with all the form data
-    // Make sure to include all required fields for the Hackathon type
     createHackathon({
       name: data.name,
       description: data.description,
@@ -126,78 +124,18 @@ const CreateHackathonForm = ({ onClose }: { onClose: () => void }) => {
         <CardTitle>Создание нового хакатона</CardTitle>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Название хакатона</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Введите название" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Описание</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Опишите цели и задачи хакатона" 
-                      className="resize-none min-h-32"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex flex-col sm:flex-row gap-4">
+        <ScrollArea className="h-[600px] w-full pr-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <FormField
                 control={form.control}
-                name="startDate"
+                name="name"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col flex-1">
-                    <FormLabel>Дата начала</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "dd.MM.yyyy")
-                            ) : (
-                              <span>Выберите дату</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < new Date(new Date().setHours(0, 0, 0, 0))
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                  <FormItem>
+                    <FormLabel>Название хакатона</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Введите название" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -205,186 +143,252 @@ const CreateHackathonForm = ({ onClose }: { onClose: () => void }) => {
 
               <FormField
                 control={form.control}
-                name="endDate"
+                name="description"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col flex-1">
-                    <FormLabel>Дата завершения</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "dd.MM.yyyy")
-                            ) : (
-                              <span>Выберите дату</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          disabled={(date) =>
-                            date < form.getValues("startDate")
-                          }
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
+                  <FormItem>
+                    <FormLabel>Описание</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Опишите цели и задачи хакатона" 
+                        className="resize-none min-h-32"
+                        {...field} 
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
 
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Место проведения</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Онлайн или физическое место" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div>
-              <FormLabel>Теги</FormLabel>
-              <div className="flex items-center gap-2 mt-2">
-                <Input
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  placeholder="Добавить тег"
-                  className="flex-1"
+              <div className="flex flex-col sm:flex-row gap-4">
+                <FormField
+                  control={form.control}
+                  name="startDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col flex-1">
+                      <FormLabel>Дата начала</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "dd.MM.yyyy")
+                              ) : (
+                                <span>Выберите дату</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date < new Date(new Date().setHours(0, 0, 0, 0))
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                <Button 
-                  type="button" 
-                  size="sm" 
-                  onClick={addTag}
-                  disabled={!tagInput}
-                >
-                  <Plus size={16} />
-                </Button>
+
+                <FormField
+                  control={form.control}
+                  name="endDate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col flex-1">
+                      <FormLabel>Дата завершения</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              className={cn(
+                                "w-full pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "dd.MM.yyyy")
+                              ) : (
+                                <span>Выберите дату</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date < form.getValues("startDate")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {tags.map((tag) => (
-                  <div 
-                    key={tag} 
-                    className="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm flex items-center gap-1"
+
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Место проведения</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Онлайн или физическое место" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div>
+                <FormLabel>Теги</FormLabel>
+                <div className="flex items-center gap-2 mt-2">
+                  <Input
+                    value={tagInput}
+                    onChange={(e) => setTagInput(e.target.value)}
+                    placeholder="Добавить тег"
+                    className="flex-1"
+                  />
+                  <Button 
+                    type="button" 
+                    size="sm" 
+                    onClick={addTag}
+                    disabled={!tagInput}
                   >
-                    {tag}
-                    <button 
-                      type="button" 
-                      onClick={() => removeTag(tag)} 
-                      className="text-muted-foreground hover:text-primary transition-colors"
+                    <Plus size={16} />
+                  </Button>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {tags.map((tag) => (
+                    <div 
+                      key={tag} 
+                      className="bg-secondary text-secondary-foreground px-2 py-1 rounded-md text-sm flex items-center gap-1"
                     >
-                      <X size={14} />
-                    </button>
-                  </div>
-                ))}
+                      {tag}
+                      <button 
+                        type="button" 
+                        onClick={() => removeTag(tag)} 
+                        className="text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1">
-                <FormLabel>Мин. размер команды</FormLabel>
-                <Input
-                  type="number"
-                  min="1"
-                  max="10"
-                  value={minTeamSize}
-                  onChange={(e) => setMinTeamSize(parseInt(e.target.value))}
-                  className="mt-2"
-                />
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <FormLabel>Мин. размер команды</FormLabel>
+                  <Input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={minTeamSize}
+                    onChange={(e) => setMinTeamSize(parseInt(e.target.value))}
+                    className="mt-2"
+                  />
+                </div>
+                <div className="flex-1">
+                  <FormLabel>Макс. размер команды</FormLabel>
+                  <Input
+                    type="number"
+                    min={minTeamSize}
+                    max="20"
+                    value={maxTeamSize}
+                    onChange={(e) => setMaxTeamSize(parseInt(e.target.value))}
+                    className="mt-2"
+                  />
+                </div>
               </div>
-              <div className="flex-1">
-                <FormLabel>Макс. размер команды</FormLabel>
-                <Input
-                  type="number"
-                  min={minTeamSize}
-                  max="20"
-                  value={maxTeamSize}
-                  onChange={(e) => setMaxTeamSize(parseInt(e.target.value))}
-                  className="mt-2"
-                />
+
+              <FormField
+                control={form.control}
+                name="organizerName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Название организатора</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Компания или организация" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL изображения хакатона</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://example.com/image.jpg" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="organizerLogo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL логотипа организатора</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://example.com/logo.png" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="website"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Веб-сайт</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-between pt-4">
+                <Button type="button" variant="ghost" onClick={onClose}>Отмена</Button>
+                <Button type="submit" form="hackathon-form">Создать хакатон</Button>
               </div>
-            </div>
-
-            <FormField
-              control={form.control}
-              name="organizerName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Название организатора</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Компания или организация" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>URL изображения хакатона</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com/image.jpg" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="organizerLogo"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>URL логотипа организатора</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com/logo.png" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="website"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Веб-сайт</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex justify-between pt-4">
-              <Button type="button" variant="ghost" onClick={onClose}>Отмена</Button>
-              <Button type="submit">Создать хакатон</Button>
-            </div>
-          </form>
-        </Form>
+            </form>
+          </Form>
+        </ScrollArea>
       </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button type="button" variant="ghost" onClick={onClose}>Отмена</Button>
+        <Button type="submit" form="hackathon-form">Создать хакатон</Button>
+      </CardFooter>
     </Card>
   );
 };
