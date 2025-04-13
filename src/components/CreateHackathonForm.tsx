@@ -56,7 +56,7 @@ const CreateHackathonForm = ({ onClose }: { onClose: () => void }) => {
       endDate: new Date(Date.now() + 86400000 * 3), // Default to 3 days later
       organizerName: '',
       imageUrl: 'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b',
-      organizerLogo: 'https://via.placeholder.com/40',
+      organizerLogo: 'https://cdn-icons-png.flaticon.com/512/4372/4372820.png',
       website: 'https://example.com/hackathon',
     },
   });
