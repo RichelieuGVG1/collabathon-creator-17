@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { Hackathon, Team, User } from '@/types';
 import { hackathons as initialHackathons } from '@/data/hackathons';
@@ -9,15 +8,18 @@ import { persist } from 'zustand/middleware';
 interface AuthState {
   currentUser: User | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; message: string }>;
   register: (name: string, email: string, password: string) => Promise<{ success: boolean; message: string }>;
   logout: () => void;
+  adminLogin: (password: string) => Promise<{ success: boolean; message: string }>;
 }
 
 interface HackathonState {
   hackathons: Hackathon[];
   getHackathonById: (id: string) => Hackathon | undefined;
   searchHackathons: (query: string, filters: string[]) => Hackathon[];
+  createHackathon: (hackathon: Omit<Hackathon, 'id'>) => Hackathon;
 }
 
 interface TeamState {
@@ -40,12 +42,11 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       currentUser: null,
       isAuthenticated: false,
+      isAdmin: false,
       login: async (email, password) => {
-        // Simple mock login, would connect to a backend in a real app
         const user = initialUsers.find(u => u.email === email);
         
         if (user) {
-          // In a real app, you would verify the password with a hash
           set({ currentUser: user, isAuthenticated: true });
           return { success: true, message: 'Login successful' };
         }
@@ -80,7 +81,15 @@ export const useAuthStore = create<AuthState>()(
         return { success: true, message: 'Registration successful' };
       },
       logout: () => {
-        set({ currentUser: null, isAuthenticated: false });
+        set({ currentUser: null, isAuthenticated: false, isAdmin: false });
+      },
+      adminLogin: async (password) => {
+        if (password === 'admin123') {
+          set({ isAdmin: true, isAuthenticated: true });
+          return { success: true, message: 'Вход администратора успешен' };
+        }
+        
+        return { success: false, message: 'Неверный пароль администратора' };
       }
     }),
     {
@@ -109,6 +118,15 @@ export const useHackathonStore = create<HackathonState>()((set, get) => ({
       
       return matchesQuery && matchesFilters;
     });
+  },
+  createHackathon: (hackathonData) => {
+    const newHackathon: Hackathon = {
+      id: `hackathon-${Date.now()}`,
+      ...hackathonData
+    };
+    
+    set(state => ({ hackathons: [...state.hackathons, newHackathon] }));
+    return newHackathon;
   }
 }));
 
@@ -138,17 +156,11 @@ export const useTeamStore = create<TeamState>()((set, get) => ({
     
     const team = teams[teamIndex];
     
-    // Check if team is full
     if (team.members.length >= team.maxMembers) return false;
     
-    // Check if user is already a member
-    if (team.members.some(m => m.id === userId)) return false;
-    
-    // Find user from users store
     const user = useUserStore.getState().getUserById(userId);
     if (!user) return false;
     
-    // Add user to team
     const updatedTeam = {
       ...team,
       members: [...team.members, user]
@@ -168,10 +180,8 @@ export const useTeamStore = create<TeamState>()((set, get) => ({
     
     const team = teams[teamIndex];
     
-    // Check if user is a member
     if (!team.members.some(m => m.id !== userId)) return false;
     
-    // Remove user from team
     const updatedTeam = {
       ...team,
       members: team.members.filter(m => m.id !== userId)
@@ -199,7 +209,6 @@ export const useUserStore = create<UserState>()((set, get) => ({
       updatedUsers[userIndex] = updatedUser;
       set({ users: updatedUsers });
       
-      // Also update the current user in auth store if it's the same user
       const currentUser = useAuthStore.getState().currentUser;
       if (currentUser && currentUser.id === updatedUser.id) {
         useAuthStore.setState({ currentUser: updatedUser });

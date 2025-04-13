@@ -1,10 +1,12 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { FadeIn, SlideUp, StaggerContainer } from '@/components/Animations';
 import HackathonCard from '@/components/HackathonCard';
 import TeamCard from '@/components/TeamCard';
 import { ArrowRight, Zap, Users, Award, Sparkles } from 'lucide-react';
+import { useAuthStore } from '@/lib/store';
+import AdminLogin from '@/components/AdminLogin';
+import AdminPanel from '@/components/AdminPanel';
 
 // Mock data
 const featuredHackathons = [
@@ -91,6 +93,8 @@ const featuredTeams = [
 ];
 
 const Index = () => {
+  const { isAdmin } = useAuthStore();
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -126,6 +130,9 @@ const Index = () => {
           </SlideUp>
         </div>
       </section>
+      
+      {/* Admin Panel (visible only when logged in as admin) */}
+      {isAdmin && <AdminPanel />}
       
       {/* Featured Hackathons */}
       <section className="py-20 px-4 bg-secondary/50">
@@ -264,6 +271,14 @@ const Index = () => {
           </SlideUp>
         </div>
       </section>
+      
+      {/* Admin Login at the bottom */}
+      <footer className="py-6 mt-10 border-t border-border">
+        <div className="container mx-auto flex flex-col items-center">
+          <p className="text-sm text-muted-foreground mb-4">© 2023 ХакХаб. Все права защищены.</p>
+          <AdminLogin />
+        </div>
+      </footer>
     </div>
   );
 };
