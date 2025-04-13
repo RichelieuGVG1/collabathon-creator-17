@@ -37,7 +37,9 @@ const HackathonCard = ({ hackathon, index = 0 }: HackathonCardProps) => {
       className="block h-full outline-none focus:ring-2 focus:ring-primary/20 rounded-lg"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ animationDelay: `${index * 100}ms` }}
+      style={{ animationDelay: `${index * 100}ms`,
+             width: '40vw'
+             }}
     >
       <Card className={`h-full overflow-hidden transition-all duration-450 ${
         isHovered ? 'transform scale-[1.02] shadow-md' : 'shadow-sm'
