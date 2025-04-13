@@ -10,11 +10,13 @@ import { FadeIn, StaggerContainer } from '@/components/Animations';
 import TeamCard from '@/components/TeamCard';
 import { Calendar, MapPin, Mail, User, Users, Pencil } from 'lucide-react';
 import { useUserStore, useAuthStore, useTeamStore, useHackathonStore } from '@/lib/store';
+import EditProfileDialog from '@/components/EditProfileDialog';
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('teams');
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   
   const { getUserById } = useUserStore();
   const { currentUser, isAuthenticated, logout } = useAuthStore();
@@ -106,7 +108,11 @@ const Profile = () => {
                   
                   {isOwnProfile && (
                     <div className="flex gap-2">
-                      <Button variant="outline" className="sm:w-auto gap-1">
+                      <Button 
+                        variant="outline" 
+                        className="sm:w-auto gap-1"
+                        onClick={() => setIsEditProfileOpen(true)}
+                      >
                         <Pencil size={16} />
                         <span>Редактировать профиль</span>
                       </Button>
@@ -302,6 +308,15 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      
+      {/* Edit Profile Dialog */}
+      {isOwnProfile && user && (
+        <EditProfileDialog 
+          user={user} 
+          open={isEditProfileOpen} 
+          onOpenChange={setIsEditProfileOpen}
+        />
+      )}
     </div>
   );
 };

@@ -32,6 +32,7 @@ interface TeamState {
 interface UserState {
   users: User[];
   getUserById: (id: string) => User | undefined;
+  updateUser: (updatedUser: User) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -168,7 +169,7 @@ export const useTeamStore = create<TeamState>()((set, get) => ({
     const team = teams[teamIndex];
     
     // Check if user is a member
-    if (!team.members.some(m => m.id === userId)) return false;
+    if (!team.members.some(m => m.id !== userId)) return false;
     
     // Remove user from team
     const updatedTeam = {
@@ -188,5 +189,21 @@ export const useUserStore = create<UserState>()((set, get) => ({
   users: initialUsers,
   getUserById: (id) => {
     return get().users.find(u => u.id === id);
+  },
+  updateUser: (updatedUser) => {
+    const { users } = get();
+    const userIndex = users.findIndex(u => u.id === updatedUser.id);
+    
+    if (userIndex !== -1) {
+      const updatedUsers = [...users];
+      updatedUsers[userIndex] = updatedUser;
+      set({ users: updatedUsers });
+      
+      // Also update the current user in auth store if it's the same user
+      const currentUser = useAuthStore.getState().currentUser;
+      if (currentUser && currentUser.id === updatedUser.id) {
+        useAuthStore.setState({ currentUser: updatedUser });
+      }
+    }
   }
 }));
