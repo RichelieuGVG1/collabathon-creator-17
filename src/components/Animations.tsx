@@ -66,8 +66,7 @@ export const SlideUp = ({
         transform: isVisible ? 'translateY(0)' : `translateY(${distance}px)`,
         transitionDuration: `${duration}ms`,
         transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-        marginBottom: '40px',
-        width: '70vw'
+        marginBottom: '40px'
       }}
     >
       {children}
