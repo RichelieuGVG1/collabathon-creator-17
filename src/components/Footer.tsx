@@ -58,14 +58,14 @@ const Footer = () => {
                   <span className="font-medium">{developer.name}</span>
                   <span className="text-sm text-muted-foreground">{developer.role}</span>
                   <div className="flex mt-2 space-x-2">
-                    <a href={developer.github} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
-                      <Github size={16} />
+                    <a href={developer.github} target="" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                      
                     </a>
-                    <a href={developer.linkedin} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
-                      <Linkedin size={16} />
+                    <a href={developer.linkedin} target="" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                      
                     </a>
                     <a href={`mailto:${developer.email}`} className="text-muted-foreground hover:text-primary">
-                      <Mail size={16} />
+                      
                     </a>
                   </div>
                 </div>
