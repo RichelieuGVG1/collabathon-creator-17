@@ -39,7 +39,7 @@ const Footer = () => {
   return (
     <footer className="border-t border-border py-10 mt-auto">
       <div className="container mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8" style={{ margin-left: '30px' }}>
           <div>
             <h3 className="text-lg font-semibold mb-4">О проекте</h3>
             <p className="text-muted-foreground mb-4">
