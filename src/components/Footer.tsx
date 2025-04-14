@@ -51,7 +51,7 @@ const Footer = () => {
           </div>
           
           <div>
-            <h3 className="text-lg font-semibold mb-4">Наша команда</h3>
+            <h3 className="text-lg font-semibold mb-4">Наша команда мечты</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               {developers.map((developer, index) => (
                 <div key={index} className="flex flex-col">
