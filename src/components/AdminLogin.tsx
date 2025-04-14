@@ -54,7 +54,7 @@ const AdminLogin = () => {
 
   if (isAdmin) {
     return (
-      <div className="flex justify-center mt-4" style={{ margin-top: '0' }}>
+      <div className="flex justify-center mt-4" style={{ marginTop: '0' }}>
         <Button onClick={handleAdminLogout} variant="outline" size="sm" className="text-xs">
           Выйти из режима администратора
         </Button>
