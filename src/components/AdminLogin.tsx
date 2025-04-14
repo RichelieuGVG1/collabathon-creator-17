@@ -54,7 +54,7 @@ const AdminLogin = () => {
 
   if (isAdmin) {
     return (
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-4" style={{ margin-top: '0' }}>
         <Button onClick={handleAdminLogout} variant="outline" size="sm" className="text-xs">
           Выйти из режима администратора
         </Button>
@@ -63,7 +63,7 @@ const AdminLogin = () => {
   }
 
   return (
-    <div className="flex justify-center mt-4">
+    <div className="flex justify-center mt-4"  style={{ margin-top: '0' }}>
       {isOpen ? (
         <Card className="w-full max-w-md">
           <form onSubmit={handleAdminLogin}>
