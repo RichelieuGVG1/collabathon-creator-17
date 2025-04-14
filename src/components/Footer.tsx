@@ -78,7 +78,7 @@ const Footer = () => {
         
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex space-x-4">
-            <a href="#" className="text-sm text-muted-foreground hover:text-primary">Лицензия на осуществление предпринимательской деятельности</a>
+            <a href="#" className="text-sm text-muted-foreground hover:text-primary"></a>
             <a href="#" className="text-sm text-muted-foreground hover:text-primary">Каперская грамота короля Георга IV</a>
           </div>
           <div className="flex space-x-4">
