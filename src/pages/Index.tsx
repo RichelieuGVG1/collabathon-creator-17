@@ -275,7 +275,7 @@ const Index = () => {
       {/* Admin Login at the bottom */}
       <footer className="py-6 mt-10 border-t border-border">
         <div className="container mx-auto flex flex-col items-center">
-          <p className="text-sm text-muted-foreground mb-4">© 2023 ХакХаб. Все права защищены.</p>
+         
           <AdminLogin />
         </div>
       </footer>
