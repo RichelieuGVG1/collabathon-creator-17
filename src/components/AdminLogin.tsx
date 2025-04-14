@@ -63,7 +63,7 @@ const AdminLogin = () => {
   }
 
   return (
-    <div className="flex justify-center mt-4"  style={{ margin-top: '0' }}>
+    <div className="flex justify-center mt-4"  style={{ marginTop: '0' }}>
       {isOpen ? (
         <Card className="w-full max-w-md">
           <form onSubmit={handleAdminLogin}>
