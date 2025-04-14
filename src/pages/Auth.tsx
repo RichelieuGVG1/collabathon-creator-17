@@ -178,7 +178,7 @@ const Auth = () => {
                     </Button>
                   </div>
                 </div>
-                
+                <!--
                 <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
                   {isLogin 
                     ? <><LogIn size={16} /> Войти</>
@@ -200,7 +200,7 @@ const Auth = () => {
                   <span>{isLogin ? 'Войти' : 'Зарегистрироваться'} через GitHub</span>
                 </Button>
               </CardContent>
-              
+              -->
               <CardFooter className="p-6 pt-0">
                 <div className="text-center w-full text-sm">
                   {isLogin ? (
