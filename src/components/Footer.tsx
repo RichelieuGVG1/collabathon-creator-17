@@ -6,33 +6,33 @@ import { Separator } from '@/components/ui/separator';
 // Developer information
 const developers = [
   {
-    name: 'Мария Иванова',
-    role: 'Frontend разработчик',
-    github: 'https://github.com/maria-ivanova',
-    linkedin: 'https://linkedin.com/in/maria-ivanova',
-    email: 'maria@example.com'
+    name: 'Василий Гурьянов',
+    role: 'Командир экипажа',
   },
   {
-    name: 'Александр Петров',
-    role: 'Backend разработчик',
-    github: 'https://github.com/alex-petrov',
-    linkedin: 'https://linkedin.com/in/alex-petrov',
-    email: 'alex@example.com'
+    name: 'Алексей Тучный',
+    role: 'Руководитель backend, второй пилот',
   },
   {
-    name: 'Елена Смирнова',
-    role: 'UI/UX дизайнер',
-    github: 'https://github.com/elena-smirnova',
-    linkedin: 'https://linkedin.com/in/elena-smirnova',
-    email: 'elena@example.com'
+    name: 'Вячеслав Попов',
+    role: 'DevOps-ер',
   },
   {
-    name: 'Дмитрий Козлов',
-    role: 'Fullstack разработчик',
-    github: 'https://github.com/dmitry-kozlov',
-    linkedin: 'https://linkedin.com/in/dmitry-kozlov',
-    email: 'dmitry@example.com'
-  }
+    name: 'Вадим Хавкин',
+    role: 'Fashion-дизайнер',
+  },
+  {
+    name: 'Евгений Лазарев',
+    role: 'Тестировщик-испытатель',
+  },
+  {
+    name: 'Иванов Иван',
+    role: 'Второй бэкендер',
+  },
+  {
+    name: 'Андрей Тарусов',
+    role: 'Скрам сэнсей',
+  },
 ];
 
 const Footer = () => {
@@ -43,7 +43,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">О проекте</h3>
             <p className="text-muted-foreground mb-4">
-              ХакХаб - платформа для объединения команд и участия в хакатонах. Найдите свою идеальную команду или создайте свою собственную.
+              ХакХаб - платформа для объединения команд и участия в хакатонах. Найдите свою идеальную команду или создайте свою собственную!
             </p>
             <p className="text-muted-foreground">
               © 2023-2025 ХакХаб. Все права защищены.
