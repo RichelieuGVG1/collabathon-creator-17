@@ -186,7 +186,7 @@ const Auth = () => {
                   }
                 </Button>
                 
-                <div className="relative flex items-center justify-center mt-6">
+                <div className="relative flex items-center justify-center mt-6" style={{display: "none"}}>
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-border"></div>
                   </div>
@@ -195,7 +195,7 @@ const Auth = () => {
                   </div>
                 </div>
                 
-                <Button variant="outline" className="w-full" type="button">
+                <Button variant="outline" className="w-full" type="button" style={{display: "none"}}>
                   <Github size={16} className="mr-2" />
                   <span>{isLogin ? 'Войти' : 'Зарегистрироваться'} через GitHub</span>
                 </Button>
