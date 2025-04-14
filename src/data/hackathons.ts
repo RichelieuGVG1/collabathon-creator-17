@@ -355,7 +355,7 @@ export const hackathons: Hackathon[] = [
     endDate: '2023-11-07',
     location: 'Москва',
     tags: ['Финтех', 'Блокчейн', 'Безопасность'],
-    imageUrl: 'https://images.unsplash.com/photo-1642543348745-755807f00628?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2342&q=80',
+    imageUrl: 'https://img.freepik.com/premium-vector/fintech-robotic-hand-financial-technology-online-banking-business-investment-banking-concept-virutal-screen_127544-751.jpg',
     organizerName: 'Лаборатория финансовых инноваций',
     organizerLogo: 'https://cdn-icons-png.flaticon.com/512/4372/4372820.png',
     teamSize: {
