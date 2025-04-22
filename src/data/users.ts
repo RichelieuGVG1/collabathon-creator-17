@@ -9,7 +9,7 @@ export const users: User[] = [
     bio: 'Инженер машинного обучения с опытом работы в области ИИ и анализа данных. Опыт работы с Python, TensorFlow и созданием масштабируемых систем МО.',
     tags: ['Python', 'ML', 'TensorFlow', 'Data Science', 'Cloud Computing'],
     photoUrl: 'https://randomuser.me/api/portraits/men/22.jpg',
-    createdAt: '2023-01-15',
+    createdAt: '2025-01-15',
     location: 'Москва',
     github: 'alexei_i',
     website: 'https://alexei.dev',
