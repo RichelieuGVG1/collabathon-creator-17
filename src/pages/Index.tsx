@@ -32,7 +32,7 @@ const featuredHackathons = [
     description: 'Разработка инновационных решений для борьбы с изменением климата и экологическими проблемами с помощью технологий.',
     startDate: '2025-10-05',
     endDate: '2025-10-07',
-    location: 'Сан-Франциско, Калифорния',
+    location: 'Москва',
     tags: ['ЭкоТехнологии', 'Устойчивое развитие', 'Экология'],
     imageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
     organizerName: 'Альянс Климата',
