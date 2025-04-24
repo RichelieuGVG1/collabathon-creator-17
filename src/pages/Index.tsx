@@ -14,8 +14,8 @@ const featuredHackathons = [
     id: '1',
     name: 'Глобальный хакатон инноваций в ИИ',
     description: 'Присоединяйтесь к крупнейшему хакатону по искусственному интеллекту и создавайте решения, которые будут формировать будущее ИИ.',
-    startDate: '2023-09-15',
-    endDate: '2023-09-18',
+    startDate: '2025-09-15',
+    endDate: '2025-09-18',
     location: 'Виртуально',
     tags: ['ИИ', 'Машинное обучение', 'Инновации'],
     imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
@@ -30,8 +30,8 @@ const featuredHackathons = [
     id: '2',
     name: 'Саммит технологий для климата',
     description: 'Разработка инновационных решений для борьбы с изменением климата и экологическими проблемами с помощью технологий.',
-    startDate: '2023-10-05',
-    endDate: '2023-10-07',
+    startDate: '2025-10-05',
+    endDate: '2025-10-07',
     location: 'Сан-Франциско, Калифорния',
     tags: ['ЭкоТехнологии', 'Устойчивое развитие', 'Экология'],
     imageUrl: 'https://images.unsplash.com/photo-1616763355548-1b606f439f86?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
@@ -46,8 +46,8 @@ const featuredHackathons = [
     id: '3',
     name: 'Хакатон разработки Web3',
     description: 'Расширяйте границы блокчейн-технологий, создавая инновационные dApps и решения Web3.',
-    startDate: '2023-11-12',
-    endDate: '2023-11-14',
+    startDate: '2025-11-12',
+    endDate: '2025-11-14',
     location: 'Виртуально',
     tags: ['Блокчейн', 'Web3', 'Крипто'],
     imageUrl: 'https://images.unsplash.com/photo-1639762681057-408e52192e55?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80',
@@ -68,13 +68,13 @@ const featuredTeams = [
     description: 'Команда специалистов по данным и инженеров машинного обучения, создающих инструменты ИИ нового поколения.',
     tags: ['Python', 'TensorFlow', 'NLP'],
     members: [
-      {id: '1', name: 'Алекс Джонсон', email: 'alex@example.com', bio: 'Инженер МО', tags: [], photoUrl: '', createdAt: '2023-01-15'},
-      {id: '2', name: 'Сэм Уилсон', email: 'sam@example.com', bio: 'Специалист по данным', tags: [], photoUrl: '', createdAt: '2023-02-10'},
-      {id: '3', name: 'Тэйлор Ким', email: 'taylor@example.com', bio: 'Исследователь ИИ', tags: [], photoUrl: '', createdAt: '2023-01-05'}
+      {id: '1', name: 'Алекс Джонсон', email: 'alex@example.com', bio: 'Инженер МО', tags: [], photoUrl: '', createdAt: '2025-01-15'},
+      {id: '2', name: 'Сэм Уилсон', email: 'sam@example.com', bio: 'Специалист по данным', tags: [], photoUrl: '', createdAt: '2025-02-10'},
+      {id: '3', name: 'Тэйлор Ким', email: 'taylor@example.com', bio: 'Исследователь ИИ', tags: [], photoUrl: '', createdAt: '2025-01-05'}
     ],
     maxMembers: 5,
     createdBy: '1',
-    createdAt: '2023-08-01'
+    createdAt: '2025-08-01'
   },
   {
     id: '2',
@@ -83,12 +83,12 @@ const featuredTeams = [
     description: 'Увлеченные созданием техн��логий, которые помогают бороться с изменением климата и способствуют устойчивому развитию.',
     tags: ['ЭкоТехнологии', 'IoT', 'React'],
     members: [
-      {id: '4', name: 'Джейми Смит', email: 'jamie@example.com', bio: 'Full-stack разработчик', tags: [], photoUrl: '', createdAt: '2023-01-15'},
-      {id: '5', name: 'Кейси Браун', email: 'casey@example.com', bio: 'UX дизайнер', tags: [], photoUrl: '', createdAt: '2023-03-20'}
+      {id: '4', name: 'Джейми Смит', email: 'jamie@example.com', bio: 'Full-stack разработчик', tags: [], photoUrl: '', createdAt: '2025-01-15'},
+      {id: '5', name: 'Кейси Браун', email: 'casey@example.com', bio: 'UX дизайнер', tags: [], photoUrl: '', createdAt: '2025-03-20'}
     ],
     maxMembers: 4,
     createdBy: '4',
-    createdAt: '2023-08-15'
+    createdAt: '2025-08-15'
   }
 ];
 
