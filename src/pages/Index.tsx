@@ -7,6 +7,7 @@ import { ArrowRight, Zap, Users, Award, Sparkles } from 'lucide-react';
 import { useAuthStore } from '@/lib/store';
 import AdminLogin from '@/components/AdminLogin';
 import AdminPanel from '@/components/AdminPanel';
+import { UserRole } from '@/types';
 
 // Mock data
 const featuredHackathons = [
@@ -93,7 +94,7 @@ const featuredTeams = [
 ];
 
 const Index = () => {
-  const { isAdmin } = useAuthStore();
+  const { role } = useAuthStore();
 
   return (
     <div className="min-h-screen">
@@ -132,7 +133,7 @@ const Index = () => {
       </section>
       
       {/* Admin Panel (visible only when logged in as admin) */}
-      {isAdmin && <AdminPanel />}
+      {role === UserRole.Admin && <AdminPanel />}
       
       {/* Featured Hackathons */}
       <section className="py-20 px-4 bg-secondary/50">

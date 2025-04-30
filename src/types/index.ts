@@ -1,3 +1,30 @@
+export interface AuthFormData {
+  userName: string | undefined;
+  email: string;
+  password: string;
+  confirmPassword: string | undefined;
+}
+
+export interface AuthResponse{
+  userId: string;
+  accessToken: string;
+  refreshToken: string;
+  requiresTwoFa: boolean;
+  requiresConfirmEmail: boolean;
+  userRole: UserRole;
+}
+
+export interface RefreshResponse{
+  accessToken: string;
+  refreshToken: string;
+}
+
+export enum UserRole{
+  Admin = "Admin",
+  User = "User",
+  None = "None"
+}
+
 
 export interface Hackathon {
   id: string;

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,15 +7,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { FadeIn, StaggerContainer } from '@/components/Animations';
 import TeamCard from '@/components/TeamCard';
-import { Calendar, MapPin, Mail, User, Users, Pencil } from 'lucide-react';
+import { MapPin, User as UserIcon, Mail, Users, Pencil } from 'lucide-react';
 import { useUserStore, useAuthStore, useTeamStore, useHackathonStore } from '@/lib/store';
 import EditProfileDialog from '@/components/EditProfileDialog';
+import { User } from '@/types';
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('teams');
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
   
   const { getUserById } = useUserStore();
   const { currentUser, isAuthenticated, logout } = useAuthStore();
@@ -26,16 +28,38 @@ const Profile = () => {
   // Find the user based on the URL param or use the current user
   const isOwnProfile = !id; 
   const profileUserId = id || (currentUser ? currentUser.id : '');
-  const user = getUserById(profileUserId);
-  
+
+  // Load user data
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        setLoading(true);
+        const userData = await getUserById(profileUserId);
+        setUser(userData);
+      } catch (error) {
+        console.error('Failed to load user:', error);
+        navigate('/error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (profileUserId) {
+      loadUser();
+    }
+  }, [profileUserId, getUserById, navigate]);
+
   // Redirect to login if viewing own profile and not authenticated
   useEffect(() => {
     if (isOwnProfile && !isAuthenticated) {
       navigate('/auth/login');
     }
   }, [isOwnProfile, isAuthenticated, navigate]);
-  
-  // If user not found
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   if (!user) {
     return (
       <div className="min-h-screen pt-20 px-4">
@@ -49,7 +73,7 @@ const Profile = () => {
       </div>
     );
   }
-  
+
   // Filter teams for this user
   const userTeams = teams.filter(team => team.members.some(member => member.id === user.id));
   
@@ -145,7 +169,7 @@ const Profile = () => {
                   <span>Команды</span>
                 </TabsTrigger>
                 <TabsTrigger value="about" className="gap-1">
-                  <User size={16} />
+                  <UserIcon size={16} />
                   <span>О пользователе</span>
                 </TabsTrigger>
               </TabsList>
@@ -199,11 +223,15 @@ const Profile = () => {
                   <div>
                     <h3 className="text-xl font-semibold mb-4">Навыки и экспертиза</h3>
                     <div className="flex flex-wrap gap-2">
-                      {user.skills?.map((skill, index) => (
+                    {Array.isArray(user.skills) && user.skills.length > 0 ? (
+                      user.skills.map((skill, index) => (
                         <Badge key={index} className="font-normal">
                           {skill}
                         </Badge>
-                      ))}
+                      ))
+                    ) : (
+                      <p className="text-muted-foreground">Навыки не указаны</p>
+                    )}
                     </div>
                   </div>
                 </div>
