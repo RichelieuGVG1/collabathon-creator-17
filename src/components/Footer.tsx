@@ -15,7 +15,7 @@ const developers = [
   },
   {
     name: 'Вячеслав Попов',
-    role: 'DevOps-ер',
+    role: 'Фронтмэн группы',
   },
   {
     name: 'Вадим Хавкин',
