@@ -90,6 +90,25 @@
     }
   }
   
+  class ModernAuthApiClient extends BaseApiClient{
+    constructor(baseURL: string = 'http://localhost:80/api/v2/') {
+      super(baseURL, async ({ accessToken, refreshToken }) => {
+        const response = await authClient.refresh({ accessToken, refreshToken });
+        this.saveTokens(response.data.accessToken, response.data.refreshToken);
+      });
+    }
+
+    async registerInitiate(data: { userName: string; email: string; password: string; confirmPassword: string }): Promise<void> {
+      await this.api.post('/auth/registerInitiate', data);
+    }
+
+    async registerConfirm(data: { email: string, registrationCode: string}) : Promise<AxiosResponse<AuthResponse>>{
+      const response = await this.api.post<AuthResponse>('/auth/registerConfirm', data);
+      this.saveTokens(response.data.accessToken, response.data.refreshToken);
+      return response;
+    }
+  }
+
   class AuthApiClient extends BaseApiClient {
     constructor(baseURL: string = 'http://localhost:80/api/v1/') {
       super(baseURL, async ({ accessToken, refreshToken }) => {
@@ -97,7 +116,7 @@
         this.saveTokens(response.data.accessToken, response.data.refreshToken);
       });
     }
-  
+    
     async register(data: { userName: string; email: string; password: string; confirmPassword: string }): Promise<AxiosResponse<AuthResponse>> {
       const response = await this.api.post<AuthResponse>('/auth/register', data);
       this.saveTokens(response.data.accessToken, response.data.refreshToken);
@@ -263,7 +282,7 @@
     // Export a singleton instance
     export const apiClient = new MainApiClient();
     export const authClient = new AuthApiClient();
-    
+    export const moderAuthClient = new ModernAuthApiClient();
     // Example usage:
     // import { apiClient } from './api/client';
     // 

@@ -94,8 +94,7 @@ const featuredTeams = [
 ];
 
 const Index = () => {
-  const { role } = useAuthStore();
-
+  const { role,isAuthenticated } = useAuthStore();
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -114,21 +113,46 @@ const Index = () => {
               Откройте для себя хакатоны, создавайте команды с талантливыми людьми и вместе создавайте удивительные проекты.
             </p>
           </SlideUp>
+          {isAuthenticated ? (
+            <>
+              <SlideUp delay={500}>
+                <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/hackathons">
+                    <Button size="lg" className="font-medium text-base w-full sm:w-auto">
+                      Просмотр хакатонов
+                    </Button>
+                  </Link>
+                  <Link to="/teams">
+                    <Button size="lg" variant="outline" className="font-medium text-base w-full sm:w-auto">
+                      Найти команды
+                    </Button>
+                  </Link>
+                </div>
+              </SlideUp>
+            </>
+          ):
+          (
+            <section className="py-20 px-4 text-center">
+              <h2 className="text-2xl font-semibold mb-4">Пожалуйста, войдите в систему</h2>
+              <p className="text-muted-foreground mb-6">
+                Чтобы получить доступ ко всем возможностям платформы, вам необходимо авторизоваться.
+              </p>
+              <div className="flex gap-4 justify-center">
+                <Link to="/auth/login">
+                  <Button size="lg" className="font-medium">
+                    Войти
+                  </Button>
+                </Link>
+                <Link to="/auth/register">
+                  <Button size="lg" variant="outline" className="font-medium">
+                    Зарегистрироваться
+                  </Button>
+                </Link>
+              </div>
+            </section>
+          )
+          }
           
-          <SlideUp delay={500}>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/hackathons">
-                <Button size="lg" className="font-medium text-base w-full sm:w-auto">
-                  Просмотр хакатонов
-                </Button>
-              </Link>
-              <Link to="/teams">
-                <Button size="lg" variant="outline" className="font-medium text-base w-full sm:w-auto">
-                  Найти команды
-                </Button>
-              </Link>
-            </div>
-          </SlideUp>
         </div>
       </section>
       
@@ -136,142 +160,146 @@ const Index = () => {
       {role === UserRole.Admin && <AdminPanel />}
       
       {/* Featured Hackathons */}
-      <section className="py-20 px-4 bg-secondary/50">
-        <div className="container mx-auto">
-          <FadeIn delay={100}>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-semibold">Избранные хакатоны</h2>
-              <Link to="/hackathons" className="flex items-center text-sm font-medium hover:underline">
-                Смотреть все <ArrowRight size={16} className="ml-1" />
-              </Link>
+      {isAuthenticated &&
+      <>
+        <section className="py-20 px-4 bg-secondary/50">
+          <div className="container mx-auto">
+            <FadeIn delay={100}>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl sm:text-3xl font-semibold">Избранные хакатоны</h2>
+                <Link to="/hackathons" className="flex items-center text-sm font-medium hover:underline">
+                  Смотреть все <ArrowRight size={16} className="ml-1" />
+                </Link>
+              </div>
+            </FadeIn>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <StaggerContainer initialDelay={300} staggerDelay={150}>
+                {featuredHackathons.map((hackathon, index) => (
+                  <HackathonCard key={hackathon.id} hackathon={hackathon} index={index} />
+                ))}
+              </StaggerContainer>
             </div>
-          </FadeIn>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <StaggerContainer initialDelay={300} staggerDelay={150}>
-              {featuredHackathons.map((hackathon, index) => (
-                <HackathonCard key={hackathon.id} hackathon={hackathon} index={index} />
-              ))}
-            </StaggerContainer>
           </div>
-        </div>
-      </section>
-      
-      {/* Features Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto max-w-5xl">
-          <FadeIn delay={100}>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-12">
-              Лучший опыт хакатонов
-            </h2>
-          </FadeIn>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            <StaggerContainer initialDelay={300} staggerDelay={150}>
-              <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
-                <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
-                  <Zap size={24} className="text-primary" />
-                </div>
-                <h3 className="text-xl font-medium mb-2">Откройте для себя события</h3>
-                <p className="text-muted-foreground">
-                  Просматривайте предстоящие хакатоны по всему миру, фильтруя по дате, месту или технологии.
-                </p>
-              </div>
-              
-              <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
-                <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
-                  <Users size={24} className="text-primary" />
-                </div>
-                <h3 className="text-xl font-medium mb-2">Создавайте команды</h3>
-                <p className="text-muted-foreground">
-                  Найдите участников с дополнительными навыками или присоединитесь к существующей команде, соответствующей вашим интересам.
-                </p>
-              </div>
-              
-              <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
-                <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
-                  <Award size={24} className="text-primary" />
-                </div>
-                <h3 className="text-xl font-medium mb-2">Побеждайте вместе</h3>
-                <p className="text-muted-foreground">
-                  Эффективно сотрудничайте, демонстрируйте свои навыки и увеличивайте свои шансы на получение призов.
-                </p>
-              </div>
-            </StaggerContainer>
-          </div>
-        </div>
-      </section>
-      
-      {/* Featured Teams */}
-      <section className="py-20 px-4 bg-secondary/50">
-        <div className="container mx-auto">
-          <FadeIn delay={100}>
-            <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl sm:text-3xl font-semibold">Популярные команды</h2>
-              <Link to="/teams" className="flex items-center text-sm font-medium hover:underline">
-                Смотреть все <ArrowRight size={16} className="ml-1" />
-              </Link>
-            </div>
-          </FadeIn>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <StaggerContainer initialDelay={300} staggerDelay={150}>
-              {featuredTeams.map((team, index) => (
-                <TeamCard 
-                  key={team.id} 
-                  team={team} 
-                  index={index}
-                  hackathonName={
-                    featuredHackathons.find(h => h.id === team.hackathonId)?.name
-                  } 
-                />
-              ))}
-            </StaggerContainer>
-          </div>
-        </div>
-      </section>
-      
-      {/* CTA Section */}
-      <section className="py-20 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(40%_40%_at_50%_60%,rgba(220,230,255,0.8),rgba(255,255,255,0))]"></div>
+        </section>
         
-        <div className="container mx-auto max-w-4xl text-center">
-          <FadeIn delay={100}>
-            <div className="inline-block mb-6">
-              <div className="rounded-full p-3 bg-secondary">
-                <Sparkles size={28} className="text-primary" />
+        <section className="py-20 px-4">
+          <div className="container mx-auto max-w-5xl">
+            <FadeIn delay={100}>
+              <h2 className="text-2xl sm:text-3xl font-semibold text-center mb-12">
+                Лучший опыт хакатонов
+              </h2>
+            </FadeIn>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+              <StaggerContainer initialDelay={300} staggerDelay={150}>
+                <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
+                  <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
+                    <Zap size={24} className="text-primary" />
+                  </div>
+                  <h3 className="text-xl font-medium mb-2">Откройте для себя события</h3>
+                  <p className="text-muted-foreground">
+                    Просматривайте предстоящие хакатоны по всему миру, фильтруя по дате, месту или технологии.
+                  </p>
+                </div>
+                
+                <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
+                  <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
+                    <Users size={24} className="text-primary" />
+                  </div>
+                  <h3 className="text-xl font-medium mb-2">Создавайте команды</h3>
+                  <p className="text-muted-foreground">
+                    Найдите участников с дополнительными навыками или присоединитесь к существующей команде, соответствующей вашим интересам.
+                  </p>
+                </div>
+                
+                <div className="bg-secondary/50 p-6 rounded-lg" style={{ width: '70vw' }}>
+                  <div className="rounded-full w-12 h-12 bg-primary/10 flex items-center justify-center mb-4">
+                    <Award size={24} className="text-primary" />
+                  </div>
+                  <h3 className="text-xl font-medium mb-2">Побеждайте вместе</h3>
+                  <p className="text-muted-foreground">
+                    Эффективно сотрудничайте, демонстрируйте свои навыки и увеличивайте свои шансы на получение призов.
+                  </p>
+                </div>
+              </StaggerContainer>
+            </div>
+          </div>
+        </section>
+        
+        {/* Featured Teams */}
+        <section className="py-20 px-4 bg-secondary/50">
+          <div className="container mx-auto">
+            <FadeIn delay={100}>
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl sm:text-3xl font-semibold">Популярные команды</h2>
+                <Link to="/teams" className="flex items-center text-sm font-medium hover:underline">
+                  Смотреть все <ArrowRight size={16} className="ml-1" />
+                </Link>
               </div>
+            </FadeIn>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <StaggerContainer initialDelay={300} staggerDelay={150}>
+                {featuredTeams.map((team, index) => (
+                  <TeamCard 
+                    key={team.id} 
+                    team={team} 
+                    index={index}
+                    hackathonName={
+                      featuredHackathons.find(h => h.id === team.hackathonId)?.name
+                    } 
+                  />
+                ))}
+              </StaggerContainer>
             </div>
-          </FadeIn>
+          </div>
+        </section>
+        
+        {/* CTA Section */}
+        <section className="py-20 px-4 relative overflow-hidden">
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(40%_40%_at_50%_60%,rgba(220,230,255,0.8),rgba(255,255,255,0))]"></div>
           
-          <SlideUp delay={200}>
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">
-              Готовы присоединиться к следующему хакатону?
-            </h2>
-          </SlideUp>
-          
-          <SlideUp delay={400}>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
-              Создайте свой аккаунт сегодня и начните общаться с талантливыми разработчиками, дизайнерами и визионерами, которые разделяют вашу страсть.
-            </p>
-          </SlideUp>
-          
-          <SlideUp delay={600}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/auth/register">
-                <Button size="lg" className="font-medium text-base w-full sm:w-auto">
-                  Создать аккаунт
-                </Button>
-              </Link>
-              <Link to="/hackathons">
-                <Button size="lg" variant="outline" className="font-medium text-base w-full sm:w-auto">
-                  Изучить хакатоны
-                </Button>
-              </Link>
-            </div>
-          </SlideUp>
-        </div>
-      </section>
+          <div className="container mx-auto max-w-4xl text-center">
+            <FadeIn delay={100}>
+              <div className="inline-block mb-6">
+                <div className="rounded-full p-3 bg-secondary">
+                  <Sparkles size={28} className="text-primary" />
+                </div>
+              </div>
+            </FadeIn>
+            
+            <SlideUp delay={200}>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-6">
+                Готовы присоединиться к следующему хакатону?
+              </h2>
+            </SlideUp>
+            
+            <SlideUp delay={400}>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10">
+                Создайте свой аккаунт сегодня и начните общаться с талантливыми разработчиками, дизайнерами и визионерами, которые разделяют вашу страсть.
+              </p>
+            </SlideUp>
+            
+            <SlideUp delay={600}>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/auth/register">
+                  <Button size="lg" className="font-medium text-base w-full sm:w-auto">
+                    Создать аккаунт
+                  </Button>
+                </Link>
+                <Link to="/hackathons">
+                  <Button size="lg" variant="outline" className="font-medium text-base w-full sm:w-auto">
+                    Изучить хакатоны
+                  </Button>
+                </Link>
+              </div>
+            </SlideUp>
+          </div>
+        </section>
+      </>
+      }
+      
       
       {/* Admin Login at the bottom */}
       <footer className="py-6 mt-10 border-t border-border">

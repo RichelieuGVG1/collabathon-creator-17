@@ -73,7 +73,7 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-1">
           <NavLink to="/" label="Главная" isActive={isActive('/')} />
           <NavLink to="/hackathons" label="Хакатоны" isActive={isActive('/hackathons')} />
-          <NavLink to="/teams" label="Команды" isActive={isActive('/teams')} />
+          {/* <NavLink to="/teams" label="Команды" isActive={isActive('/teams')} /> */}
         </nav>
 
         {/* Desktop Right Side */}

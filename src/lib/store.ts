@@ -5,8 +5,7 @@ import { teams as initialTeams } from '@/data/teams';
 //import { users as initialUsers } from '@/data/users';
 import { persist } from 'zustand/middleware';
 import axios, { AxiosResponse } from 'axios';
-import Auth from '@/pages/Auth';
-import { apiClient, authClient } from './test';
+import { apiClient, authClient, moderAuthClient } from './test';
 
 // interface AuthState {
 //   currentUser: User | null;
@@ -28,6 +27,9 @@ interface AuthState {
   role: UserRole;
   error: string | null;
   isLoading: boolean;
+
+  registerInitiate: (data: { userName: string; email: string; password: string; confirmPassword: string }) => Promise<void>;
+  registerConfirm: (data: { email: string, registrationCode: string}) => Promise<AxiosResponse<AuthResponse>>;
 
   login: (data: {email: string, password: string}) => Promise<AxiosResponse<AuthResponse>>;
   register: (data: { 
@@ -114,6 +116,58 @@ export const useAuthStore = create<AuthState>()(
           throw new Error(message);
         }
         finally{
+          set({isLoading: false})
+        }
+      },
+
+      registerInitiate: async({userName, email, password, confirmPassword}) => {
+        set({isLoading: true, error: null})
+        try {
+          await moderAuthClient.registerInitiate({userName, email, password, confirmPassword});
+        } catch (error) {
+          const message = axios.isAxiosError(error)
+            ? error.response?.data?.description || 'Register failed'
+            : 'Unknown error';
+          set({error: message})
+          throw new Error(message);
+        }
+        finally {
+          set({isLoading: false})
+        }
+      },
+
+      registerConfirm: async({email, registrationCode}) => {
+        set({isLoading: true, error: null})
+        try {
+          const response = await moderAuthClient.registerConfirm({email, registrationCode});
+          const data = response.data;
+          set(
+            {
+              role: data.userRole,
+              accessToken: data.accessToken,
+              refreshToken: data.refreshToken,
+              requiresTwoFa: data.requiresTwoFa,
+              requiresConfirmEmail: data.requiresConfirmEmail,
+              isAuthenticated: !data.requiresTwoFa && !data.requiresConfirmEmail
+            }
+          );
+          
+          if(!data.requiresTwoFa && !data.requiresConfirmEmail){
+            console.log(`set currentUser for useAuthStore was called with id ${data.userId}`);
+            const user = await apiClient.getUserById(data.userId);
+            set({currentUser: user});
+          }
+
+          return response;
+
+        } catch (error) {
+          const message = axios.isAxiosError(error)
+            ? error.response?.data?.description || 'Register failed'
+            : 'Unknown error';
+          set({error: message})
+          throw new Error(message);
+        }
+        finally {
           set({isLoading: false})
         }
       },
