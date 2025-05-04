@@ -176,7 +176,7 @@
     
 
   class MainApiClient extends BaseApiClient{
-    constructor(baseURL: string = 'http://localhost:80/api/main/'){
+    constructor(baseURL: string = 'http://localhost:5002/api/main'){
         super(baseURL, async ({ accessToken, refreshToken }) => {
             const response = await authClient.refresh({ accessToken, refreshToken });
             localStorage.setItem('accessToken', response.data.accessToken);
@@ -199,82 +199,86 @@
               params.append('tab', filters.tab);
             }
             
-            const response = await this.api.get<Hackathon[]>(`/hackathons?${params.toString()}`);
+            const response = await this.api.get<Hackathon[]>(`/Hackathon?${params.toString()}`);
             return response.data;
         }
         
         async getHackathonById(id: string): Promise<Hackathon> {
-            const response = await this.api.get<Hackathon>(`/hackathons/${id}`);
+            const response = await this.api.get<Hackathon>(`/Hackathon/${id}`);
             return response.data;
         }
     
         async createHackathon(hackathon: Omit<Hackathon, 'id'>): Promise<Hackathon> {
-            const response = await this.api.post<Hackathon>('/hackathons', hackathon);
+            const response = await this.api.post<Hackathon>('/Hackathon', hackathon);
             return response.data;
         }
     
-        async updateHackathon(id: string, hackathon: Omit<Hackathon, 'id'>): Promise<void> {
-            await this.api.put(`/hackathons/${id}`, hackathon);
-        }
+        // async updateHackathon(id: string, hackathon: Omit<Hackathon, 'id'>): Promise<void> {
+        //     await this.api.put(`/hackathons/${id}`, hackathon);
+        // }
     
-        async deleteHackathon(id: string): Promise<void> {
-            await this.api.delete(`/hackathons/${id}`);
-        }
+        // async deleteHackathon(id: string): Promise<void> {
+        //     await this.api.delete(`/hackathons/${id}`);
+        // }
     
         // Team endpoints
+        async getTeams(): Promise<Team[]> {
+          const response = await this.api.get<Team[]>(`/main/Team/`);
+          return response.data;
+      }
         async getTeamsForHackathon(hackathonId: string): Promise<Team[]> {
-            const response = await this.api.get<Team[]>(`/teams/hackathon/${hackathonId}`);
+            const response = await this.api.get<Team[]>(`/main/Team/hackathon/${hackathonId}`);
             return response.data;
         }
     
         async getTeamById(id: string): Promise<Team> {
-            const response = await this.api.get<Team>(`/teams/${id}`);
+            const response = await this.api.get<Team>(`/main/Team/${id}`);
             return response.data;
         }
     
-        async createTeam(team: Omit<Team, 'id'>): Promise<Team> {
-            const response = await this.api.post<Team>('/teams', team);
+        async createTeam(team: Omit<Team, 'id' | 'createdAt'>): Promise<Team> {
+            const response = await this.api.post<Team>('/main/Team', team);
             return response.data;
         }
     
-        async updateTeam(id: string, team: Omit<Team, 'id'>): Promise<void> {
-            await this.api.put(`/teams/${id}`, team);
+        // async updateTeam(id: string, team: Omit<Team, 'id'>): Promise<void> {
+        //     await this.api.put(`/teams/${id}`, team);
+        // }
+    
+        // async deleteTeam(id: string): Promise<void> {
+        //     await this.api.delete(`/teams/${id}`);
+        // }
+    
+        async joinTeam(teamId: string, userId: string): Promise<boolean> {
+            const response = await this.api.post<Team>(`/main/Team/${teamId}/users/${userId}`);
+            return response.status == 200;
         }
     
-        async deleteTeam(id: string): Promise<void> {
-            await this.api.delete(`/teams/${id}`);
-        }
-    
-        async addMemberToTeam(teamId: string, userId: string): Promise<Team> {
-            const response = await this.api.post<Team>(`/teams/${teamId}/members/${userId}`);
-            return response.data;
-        }
-    
-        async removeMemberFromTeam(teamId: string, userId: string): Promise<Team> {
-            const response = await this.api.delete<Team>(`/teams/${teamId}/members/${userId}`);
-            return response.data;
+        async leaveTeam(teamId: string, userId: string): Promise<boolean> {
+            const response = await this.api.delete<Team>(`/main/Team/${teamId}/users/${userId}`);
+            return response.status == 200;
         }
     
         // User endpoints
         async getUsers() : Promise<User[]>{
-          const response = await this.api.get<User[]>('/User');
+          const response = await this.api.get<User[]>('/main/User');
           return response.data;
         }
 
 
         async getUserById(id: string): Promise<User> {
             console.log(`Guid for axios (getUserById): ${id}`);
-            const response = await this.api.get<User>(`/User/${id}`);
+            const response = await this.api.get<User>(`/main/User/${id}`);
             return response.data;
         }
     
         async createUser(user: User): Promise<User> {
-            const response = await this.api.post<User>('/User', user);
+            const response = await this.api.post<User>('/main/User', user);
             return response.data;
         }
     
         async updateUser(user: User): Promise<void> {
-            await this.api.put(`/User`, user);
+            await this.api.put(`/main/User`, user);
         }
         
   }

@@ -19,15 +19,24 @@ const HackathonDetail = () => {
   const [activeTab, setActiveTab] = useState('info');
   
   const { getHackathonById } = useHackathonStore();
-  const { teams, getTeamsByHackathonId } = useTeamStore();
+  const { getTeamsByHackathonId } = useTeamStore();
   const { isAuthenticated } = useAuthStore();
   
-  // Find the hackathon based on the URL param
-  const hackathon = id ? getHackathonById(id) : undefined;
-  
-  // Filter teams for this hackathon
-  const hackathonTeams = id ? getTeamsByHackathonId(id) : [];
-  
+  const [hackathon, setHackathon] = useState(null);
+  const [hackathonTeams, setHackathonTeams] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (id) {
+        const hackathonData = await getHackathonById(id);
+        setHackathon(hackathonData);
+        
+        const teamsData = await getTeamsByHackathonId(id);
+        setHackathonTeams(teamsData);
+      }
+    };
+    
+    fetchData();
+  }, [id, getHackathonById, getTeamsByHackathonId]);
   // If hackathon not found
   if (!hackathon) {
     return (

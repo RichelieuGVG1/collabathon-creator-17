@@ -12,18 +12,21 @@ import { Search, Filter, Plus, X } from 'lucide-react';
 
 const Teams = () => {
   const { teams } = useTeamStore();
-  const { hackathons, getHackathonById } = useHackathonStore();
+  const { hackathons, fetchHackathons, getHackathonById } = useHackathonStore();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   
+  useEffect(() => {
+    fetchHackathons();
+  }, [fetchHackathons]);
+
   // Get hackathon names by their IDs
-  const getHackathonName = (hackathonId: string): string => {
-    const hackathon = getHackathonById(hackathonId);
+  const getHackathonName = (id: string) => {
+    const hackathon = hackathons.find(m=>m.id==id);
     return hackathon ? hackathon.name : 'Неизвестный хакатон';
   };
-  
   // Get all available tags from teams
   const allTags = Array.from(
     new Set(teams.flatMap(team => team.tags))

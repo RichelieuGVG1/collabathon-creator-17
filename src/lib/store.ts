@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { AuthResponse, Hackathon, RefreshResponse, Team, User, UserRole } from '@/types';
+import { AuthResponse, Hackathon, RefreshResponse, Team, User, UserRole, SearchFilters } from '@/types';
 import { hackathons as initialHackathons } from '@/data/hackathons';
 import { teams as initialTeams } from '@/data/teams';
 //import { users as initialUsers } from '@/data/users';
@@ -52,24 +52,36 @@ interface AuthState {
 
 interface HackathonState {
   hackathons: Hackathon[];
-  getHackathonById: (id: string) => Hackathon | undefined;
+  isLoading: boolean;
+  error: string | null;
+  fetchHackathons: (query?: string, filters?: string[], tab?: 'all' | 'upcoming' | 'past') => Promise<void>;
+  getHackathonById: (id: string) => Promise<Hackathon | undefined>;
   searchHackathons: (query: string, filters: string[]) => Hackathon[];
-  createHackathon: (hackathon: Omit<Hackathon, 'id'>) => Hackathon;
+  createHackathon: (hackathon: Omit<Hackathon, 'id'>) => Promise<Hackathon>;
+  // updateHackathon: (id: string, hackathon: Omit<Hackathon, 'id'>) => Promise<void>;
+  // deleteHackathon: (id: string) => Promise<void>;
 }
 
 interface TeamState {
   teams: Team[];
-  getTeamById: (id: string) => Team | undefined;
-  getTeamsByHackathonId: (hackathonId: string) => Team[];
-  createTeam: (team: Omit<Team, 'id' | 'createdAt'>) => Team;
+  isLoading: boolean;
+  error: string | null;
+  fetchTeams: () => Promise<void>;
+  getTeamById: (id: string) => Promise<Team | undefined>;
+  getTeamsByHackathonId: (hackathonId: string) => Promise<Team[]>;
+  createTeam: (team: Omit<Team, 'id' | 'createdAt'>) => Promise<Team>;
+  // updateTeam: (id: string, team: Omit<Team, 'id'>) => Promise<void>;
+  // deleteTeam: (id: string) => Promise<void>;
   joinTeam: (teamId: string, userId: string) => Promise<boolean>;
-  leaveTeam: (teamId: string, userId: string) => boolean;
+  leaveTeam: (teamId: string, userId: string) => Promise<boolean>;
 }
 
 interface UserState {
-  // users: User[];
-  getUserById: (id: string) => Promise<User> | undefined;
-  updateUser: (updatedUser: User) => void;
+  users: User[];
+  isLoading: boolean;
+  error: string | null;
+  getUserById: (id: string) => Promise<User | undefined>;
+  updateUser: (updatedUser: User) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -318,9 +330,29 @@ export const useAuthStore = create<AuthState>()(
 // );
 
 export const useHackathonStore = create<HackathonState>()((set, get) => ({
-  hackathons: initialHackathons,
-  getHackathonById: (id) => {
-    return get().hackathons.find(h => h.id === id);
+  hackathons: [],
+  isLoading: false,
+  error: null,
+  fetchHackathons: async (query = '', filters = [], tab = 'all') => {
+    set({ isLoading: true, error: null });
+    try {
+      const searchFilters: SearchFilters = {query:query, tags:filters, tab:tab}
+      const hackathons = await apiClient.getHackathons(searchFilters);
+      set({ hackathons, isLoading: false });
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to fetch hackathons' 
+      });
+    }
+  },
+  getHackathonById: async (id) => {
+    try {
+      const hackathon = await apiClient.getHackathonById(id);
+      return hackathon;
+    } catch (error) {
+      return undefined;
+    }
   },
   searchHackathons: (query, filters) => {
     const { hackathons } = get();
@@ -338,93 +370,259 @@ export const useHackathonStore = create<HackathonState>()((set, get) => ({
       return matchesQuery && matchesFilters;
     });
   },
-  createHackathon: (hackathonData) => {
-    const newHackathon: Hackathon = {
-      id: `hackathon-${Date.now()}`,
-      ...hackathonData
-    };
-    
-    set(state => ({ hackathons: [...state.hackathons, newHackathon] }));
-    return newHackathon;
+  createHackathon: async (hackathonData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newHackathon = await apiClient.createHackathon(hackathonData);
+      set(state => ({ 
+        hackathons: [...state.hackathons, newHackathon],
+        isLoading: false
+      }));
+      return newHackathon;
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to create hackathon' 
+      });
+      throw error;
+    }
+  },
+  // updateHackathon: async (id, hackathonData) => {
+  //   set({ isLoading: true, error: null });
+  //   try {
+  //     await apiClient.updateHackathon(id, hackathonData);
+  //     const updatedHackathon = await apiClient.getHackathonById(id);
+  //     set(state => ({
+  //       hackathons: state.hackathons.map(h => 
+  //         h.id === id ? updatedHackathon : h
+  //       ),
+  //       isLoading: false
+  //     }));
+  //   } catch (error: any) {
+  //     set({ 
+  //       isLoading: false, 
+  //       error: error.message || 'Failed to update hackathon' 
+  //     });
+  //     throw error;
+  //   }
+  // },
+  // deleteHackathon: async (id) => {
+  //   set({ isLoading: true, error: null });
+  //   try {
+  //     await apiClient.deleteHackathon(id);
+  //     set(state => ({
+  //       hackathons: state.hackathons.filter(h => h.id !== id),
+  //       isLoading: false
+  //     }));
+  //   } catch (error: any) {
+  //     set({ 
+  //       isLoading: false, 
+  //       error: error.message || 'Failed to delete hackathon' 
+  //     });
+  //     throw error;
+  //   }
+  // }
+}));
+
+// Team Store
+export const useTeamStore = create<TeamState>()((set, get) => ({
+  teams: [],
+  isLoading: false,
+  error: null,
+  fetchTeams: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const teams = await apiClient.getTeams();
+      set({ teams, isLoading: false });
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to fetch teams' 
+      });
+    }
+  },
+  getTeamById: async (id) => {
+    try {
+      return await apiClient.getTeamById(id);
+    } catch (error) {
+      return undefined;
+    }
+  },
+  getTeamsByHackathonId: async (hackathonId) => {
+    set({ isLoading: true, error: null });
+    try {
+      const teams = await apiClient.getTeamsForHackathon(hackathonId);
+      // Update the store with these teams
+      set(state => {
+        const existingTeams = state.teams.filter(t => t.hackathonId !== hackathonId);
+        return { 
+          teams: [...existingTeams, ...teams],
+          isLoading: false
+        };
+      });
+      return teams;
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to fetch teams' 
+      });
+      return [];
+    }
+  },
+  createTeam: async (teamData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const newTeam = await apiClient.createTeam(teamData);
+      set(state => ({ 
+        teams: [...state.teams, newTeam],
+        isLoading: false
+      }));
+      return newTeam;
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to create team' 
+      });
+      throw error;
+    }
+  },
+  // updateTeam: async (id, teamData) => {
+  //   set({ isLoading: true, error: null });
+  //   try {
+  //     await apiClient.updateTeam(id, teamData);
+  //     const updatedTeam = await apiClient.getTeamById(id);
+  //     set(state => ({
+  //       teams: state.teams.map(t => 
+  //         t.id === id ? updatedTeam : t
+  //       ),
+  //       isLoading: false
+  //     }));
+  //   } catch (error: any) {
+  //     set({ 
+  //       isLoading: false, 
+  //       error: error.message || 'Failed to update team' 
+  //     });
+  //     throw error;
+  //   }
+  // },
+  // deleteTeam: async (id) => {
+  //   set({ isLoading: true, error: null });
+  //   try {
+  //     await apiClient.deleteTeam(id);
+  //     set(state => ({
+  //       teams: state.teams.filter(t => t.id !== id),
+  //       isLoading: false
+  //     }));
+  //   } catch (error: any) {
+  //     set({ 
+  //       isLoading: false, 
+  //       error: error.message || 'Failed to delete team' 
+  //     });
+  //     throw error;
+  //   }
+  // },
+  joinTeam: async (teamId, userId) => {
+    set({ isLoading: true, error: null });
+    try {
+      await apiClient.joinTeam(teamId, userId);
+      // Refresh the team data
+      const updatedTeam = await apiClient.getTeamById(teamId);
+      
+      set(state => ({
+        teams: state.teams.map(t => 
+          t.id === teamId ? updatedTeam : t
+        ),
+        isLoading: false
+      }));
+      
+      return true;
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to join team' 
+      });
+      return false;
+    }
+  },
+  leaveTeam: async (teamId, userId) => {
+    set({ isLoading: true, error: null });
+    try {
+      await apiClient.leaveTeam(teamId, userId);
+      // Refresh the team data
+      const updatedTeam = await apiClient.getTeamById(teamId);
+      
+      set(state => ({
+        teams: state.teams.map(t => 
+          t.id === teamId ? updatedTeam : t
+        ),
+        isLoading: false
+      }));
+      
+      return true;
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to leave team' 
+      });
+      return false;
+    }
   }
 }));
 
-export const useTeamStore = create<TeamState>()((set, get) => ({
-  teams: initialTeams,
-  getTeamById: (id) => {
-    return get().teams.find(t => t.id === id);
-  },
-  getTeamsByHackathonId: (hackathonId) => {
-    return get().teams.filter(t => t.hackathonId === hackathonId);
-  },
-  createTeam: (teamData) => {
-    const newTeam: Team = {
-      id: `team-${Date.now()}`,
-      ...teamData,
-      createdAt: new Date().toISOString()
-    };
-    
-    set(state => ({ teams: [...state.teams, newTeam] }));
-    return newTeam;
-  },
-  joinTeam: async (teamId, userId) => {
-    const teams = get().teams;
-    const teamIndex = teams.findIndex(t => t.id === teamId);
-    
-    if (teamIndex === -1) return false;
-    
-    const team = teams[teamIndex];
-    
-    if (team.members.length >= team.maxMembers) return false;
-    
-    const user = await useUserStore.getState().getUserById(userId);
-    if (!user) return false;
-    
-    const updatedTeam = {
-      ...team,
-      members: [...team.members, user]
-    };
-    
-    const updatedTeams = [...teams];
-    updatedTeams[teamIndex] = updatedTeam;
-    
-    set({ teams: updatedTeams });
-    return true;
-  },
-  leaveTeam: (teamId, userId) => {
-    const teams = get().teams;
-    const teamIndex = teams.findIndex(t => t.id === teamId);
-    
-    if (teamIndex === -1) return false;
-    
-    const team = teams[teamIndex];
-    
-    if (!team.members.some(m => m.id !== userId)) return false;
-    
-    const updatedTeam = {
-      ...team,
-      members: team.members.filter(m => m.id !== userId)
-    };
-    
-    const updatedTeams = [...teams];
-    updatedTeams[teamIndex] = updatedTeam;
-    
-    set({ teams: updatedTeams });
-    return true;
-  },
-}));
-
-export const useUserStore = create<UserState>()(() => ({
+// User Store
+export const useUserStore = create<UserState>()((set, get) => ({
+  users: [],
+  isLoading: false,
+  error: null,
   getUserById: async (id) => {
-    console.log(`Guid for useUserStore (getUserById): ${id}`);
-    return await apiClient.getUserById(id);
+    set({ isLoading: true, error: null });
+    try {
+      const user = await apiClient.getUserById(id);
+      
+      // Update the user in our local state if we have it
+      set(state => {
+        const userIndex = state.users.findIndex(u => u.id === id);
+        if (userIndex !== -1) {
+          const updatedUsers = [...state.users];
+          updatedUsers[userIndex] = user;
+          return { users: updatedUsers, isLoading: false };
+        }
+        return { users: [...state.users, user], isLoading: false };
+      });
+      
+      return user;
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to fetch user' 
+      });
+      return undefined;
+    }
   },
-  updateUser: async (updatedUser) => {
-    await apiClient.updateUser(updatedUser);
-
-    const currentUser = useAuthStore.getState().currentUser;
-    if (currentUser && currentUser.id === updatedUser.id) {
-      useAuthStore.setState({ currentUser: updatedUser });
+  updateUser: async (userData) => {
+    set({ isLoading: true, error: null });
+    try {
+      await apiClient.updateUser(userData);
+      const updatedUser = await apiClient.getUserById(userData.id);
+      
+      set(state => ({
+        users: state.users.map(u => 
+          u.id === userData.id ? updatedUser : u
+        ),
+        isLoading: false
+      }));
+      
+      // Update the currentUser in auth store if it's the same user
+      const currentUser = useAuthStore.getState().currentUser;
+      if (currentUser && currentUser.id === userData.id) {
+        useAuthStore.setState({ currentUser: updatedUser });
+      }
+    } catch (error: any) {
+      set({ 
+        isLoading: false, 
+        error: error.message || 'Failed to update user' 
+      });
+      throw error;
     }
   }
 }));

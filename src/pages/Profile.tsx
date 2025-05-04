@@ -11,6 +11,7 @@ import { MapPin, User as UserIcon, Mail, Users, Pencil } from 'lucide-react';
 import { useUserStore, useAuthStore, useTeamStore, useHackathonStore } from '@/lib/store';
 import EditProfileDialog from '@/components/EditProfileDialog';
 import { User } from '@/types';
+import { hackathons } from '@/data/hackathons';
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,9 +23,9 @@ const Profile = () => {
   
   const { getUserById } = useUserStore();
   const { currentUser, isAuthenticated, logout } = useAuthStore();
-  const { teams } = useTeamStore();
+  const { teams , fetchTeams} = useTeamStore();
   const { getHackathonById } = useHackathonStore();
-  
+  const [hackathon, setHackathon] = useState(null);
   // Find the user based on the URL param or use the current user
   const isOwnProfile = !id; 
   const profileUserId = id || (currentUser ? currentUser.id : '');
@@ -55,6 +56,20 @@ const Profile = () => {
       navigate('/auth/login');
     }
   }, [isOwnProfile, isAuthenticated, navigate]);
+
+  useEffect(() => {
+      const fetchData = async () => {
+        if (id) {
+          const hackathonData = await getHackathonById(id);
+          setHackathon(hackathonData);
+        }
+      };
+      fetchData();
+    }, [id, getHackathonById]);
+  
+  useEffect(() => {
+    fetchTeams();
+  }, [fetchTeams]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -98,7 +113,6 @@ const Profile = () => {
   
   // Get hackathon name by ID
   const getHackathonName = (id: string) => {
-    const hackathon = getHackathonById(id);
     return hackathon ? hackathon.name : 'Неизвестный хакатон';
   };
   

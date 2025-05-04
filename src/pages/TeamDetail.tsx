@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -21,9 +21,29 @@ const TeamDetail = () => {
   const { getTeamById, joinTeam, leaveTeam } = useTeamStore();
   const { getHackathonById } = useHackathonStore();
   const { isAuthenticated, currentUser } = useAuthStore();
+  const [team, setTeams] = useState(null);
+  const [hackathon, setHackathon] = useState(null);
   
-  // Find the team based on the URL param
-  const team = id ? getTeamById(id) : undefined;
+  useEffect(() => {
+        const fetchData = async () => {
+          if (id) {
+            const hackathonData = await getTeamById(id);
+            setTeams(hackathonData);
+          }
+        };
+        fetchData();
+      }, [id, getTeamById]);
+
+  // Get hackathon details
+  useEffect(() => {
+        const fetchData = async () => {
+          if (id) {
+            const hackathonData = await getHackathonById(team.hackathonId);
+            setHackathon(hackathonData);
+          }
+        };
+        fetchData();
+      }, [id, getHackathonById]);
   
   // If team not found
   if (!team) {
@@ -39,9 +59,6 @@ const TeamDetail = () => {
       </div>
     );
   }
-  
-  // Get hackathon details
-  const hackathon = getHackathonById(team.hackathonId);
   
   // Format date
   const formatDate = (dateString: string) => {

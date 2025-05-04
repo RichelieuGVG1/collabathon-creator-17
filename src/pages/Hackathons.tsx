@@ -12,13 +12,15 @@ import { Search, Filter, Calendar, MapPin, X } from 'lucide-react';
 import { useHackathonStore } from '@/lib/store';
 
 const Hackathons = () => {
-  const { hackathons, searchHackathons } = useHackathonStore();
+  const { hackathons, fetchHackathons, searchHackathons } = useHackathonStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState('all');
   const [filteredHackathons, setFilteredHackathons] = useState<Hackathon[]>([]);
   const [showFilters, setShowFilters] = useState(false);
-
+  useEffect(() => {
+    fetchHackathons();
+  }, [fetchHackathons]);
   // Update filtered hackathons when query, filters, or tab changes
   useEffect(() => {
     // Filter hackathons based on search query and filters
